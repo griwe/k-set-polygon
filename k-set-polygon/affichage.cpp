@@ -1,52 +1,34 @@
 #include "affichage.h"
 #include "point.h"
-#include "carte.h"
+#include "polygone.h"
 #include "graphics.h"
 #include <iostream>
-#include <algorithm>
-using namespace std;
 
 
 // trace un segment entre deux points a et b
 void segment(const Point & a, const Point & b)
 {
-    line(a.x(), height - a.y(), b.x(), height - b.y());
+    line(a.x(), a.y(), b.x(), b.y());
 }
 
-void trace(const Carte &C)
+
+// trace le polygone P dans une fenÃªtre graphique
+void trace(const Polygone &P)
 {
-    for(int i=0; i<C.nbDemiCotes(); i++)
+    Sommet *p = P.premier();
+
+     if(p==nullptr)
+        return;
+
+    do
     {
-       DemiCote *dc = C.demiCote(i);
-       Point p1 = dc->coordonnees();
+        segment(p->coordonnees(), p->suivant()->coordonnees());
+        p = p->suivant();
 
-       DemiCote *dcOp = dc->oppose();
-       Point p2 = dcOp->coordonnees();
-
-       segment(p1,p2);
-    }
-
-
+    }while(p !=  P.premier());
 }
 
-void triangulation( vector<Point> &T, Carte &C)
-{
-    sort(T.begin(),T.end()); //on suppose que l’opération < est surchargé pour les points
-    DemiCote *dc = C.ajouteCote(T[1],T[0]) ;
-    for(int i = 2 ; i < T.size(); i++)
-    {
-        DemiCote* loin = C.ajouteCote(T[i],dc);
-        while(loin->coordonnees().aGauche( dc->coordonnees() , dc->suivant()->suivant()->oppose()->coordonnees()) == -1)
-              {
-                   dc = C.ajouteCote(dc->suivant()->suivant()->oppose(),loin);
-                   dc = dc->precedent();
-              }
-        dc = loin->oppose()->precedent();
-        while(loin->coordonnees().aGauche(dc->coordonnees(), dc->oppose()->coordonnees()) == 1 )
-            {
-                loin = C.ajouteCote(loin, dc->oppose()->precedent());// loin = C.ajouteDemiCote( mettre les paramatres dans le bon sens)
-                dc = dc->oppose()->precedent()->precedent();
-            }
-        dc = loin;
-    }
-}
+
+
+
+

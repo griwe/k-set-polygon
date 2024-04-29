@@ -1,61 +1,35 @@
 #include <iostream>
-#include <random>
-#include <ctime>
-
 #include "graphics.h"
 #include "point.h"
 #include "affichage.h"
-#include "carte.h"
+#include "polygone.h"
+#include <iostream>
 
 using namespace std;
-const int height = 900;
-
 
 
 int main()
 {
-    opengraphsize(1800, height);
-    setbkcolor(WHITE);
+    opengraphsize(1800,900);
+    setbkcolor(RED);
     cleardevice();
     setcolor(BLUE);
-    /*
-    Point p2{100,100};
-    Point p1{100,500};
 
+    //Déclaration de points
+    Point p1{100,100};
+    Point p2{100,500};
     Point p3{500,500};
     Point p4{500,100};
 
-    Carte c = Carte{};
-    DemiCote *d = c.ajouteCote(p1,p2);
-    DemiCote *d1 = c.ajouteCote(p3,p4);
-    DemiCote *d2 = c.ajouteCote(d,d1);
-    DemiCote *d3 = c.ajouteCote(d->oppose(),d1->oppose());
-    */
-    // Initialisation du générateur de nombres aléatoires
-    std::random_device rd;
-    std::mt19937 gen(std::time(0));
+    //Construction d'un polygone
+    Polygone poly{};
+    Sommet *prec1 = poly.ajouteSommet(p1,nullptr);
+    Sommet *prec2 = poly.ajouteSommet(p2,prec1);
+    Sommet *prec3 = poly.ajouteSommet(p3,prec2);
+    Sommet *prec4 = poly.ajouteSommet(p4,prec3);
+    poly.supprimeSommet(prec3);
 
-
-    // Création du vecteur pour stocker les points
-    std::vector<Point> points;
-
-    // Générer 10 points aléatoires et les stocker dans le vecteur
-    for (int i = 0; i < 10; i++) {
-        std::uniform_int_distribution<int> dis(100, 800);
-        int x = dis(gen);
-        int y = dis(gen);
-        points.push_back(Point(x, y));
-    }
-    Carte c = Carte{};
-
-    triangulation(points, c);
-
-
-
-    //c.ajouteCote(p2,p3);
-    //c.ajouteCote(p1,p4);
-
-    trace(c);
+    trace(poly);
 
     getch();
     closegraph();

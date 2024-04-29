@@ -2,16 +2,12 @@
 #define AFFICHAGE_H
 
 #include "point.h"
-#include "carte.h"
-
-extern const int height;
+#include "polygone.h"
 
 // trace un segment entre deux points a et b
-void segment(const Point &a, const Point &b);
+void segment(const Point & a, const Point & b);
 
-// trace la carte C dans une fenêtre graphique
-void trace(const Carte &C);
-
-void triangulation( vector<Point> &T, Carte &C);
+// trace le polygone P dans une fenêtre graphique
+void trace(const Polygone &P);
 
 #endif
