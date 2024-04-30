@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>"polygone.h"</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>"sommet.h"</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,6 +133,7 @@
     <ClCompile Include="..\..\..\Algorithmique Géométrique\TP1\polygone.cpp" />
     <ClCompile Include="affichage.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="sommet.cpp" />
     <ClCompile Include="winbgi.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +142,7 @@
     <ClInclude Include="affichage.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="point.h" />
+    <ClInclude Include="sommet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
