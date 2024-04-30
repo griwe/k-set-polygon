@@ -70,6 +70,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PublicIncludeDirectories>C:\Users\victo\Documents\M1\Projet\k-set-polygon;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -128,20 +131,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Algorithmique Géométrique\TP1\enveloppe.cpp" />
-    <ClCompile Include="..\..\..\Algorithmique Géométrique\TP1\point.cpp" />
-    <ClCompile Include="..\..\..\Algorithmique Géométrique\TP1\polygone.cpp" />
     <ClCompile Include="affichage.cpp" />
+    <ClCompile Include="enveloppe.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="point.cpp" />
     <ClCompile Include="sommet.cpp" />
     <ClCompile Include="winbgi.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Algorithmique Géométrique\TP1\enveloppe.h" />
-    <ClInclude Include="..\..\..\Algorithmique Géométrique\TP1\polygone.h" />
     <ClInclude Include="affichage.h" />
+    <ClInclude Include="enveloppe.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="point.h" />
+    <ClInclude Include="polygone.h" />
     <ClInclude Include="sommet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

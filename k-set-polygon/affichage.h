@@ -2,6 +2,7 @@
 #define AFFICHAGE_H
 
 #include "point.h"
+#include "sommet.h"
 #include "polygone.h"
 
 
