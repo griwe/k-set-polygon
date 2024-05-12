@@ -17,6 +17,13 @@ public:
 	int aGauche(const Point &a, const Point &b) const;
 	bool operator<(const Point& a) const;
 
+	void operator+=(const Point& p);
+
+	void operator-=(const Point& p);
+	
+	void affiche() const;
+	void affiche(int k) const;
+
 private:
     // coordonnées
 	int d_x, d_y;

@@ -135,6 +135,7 @@
     <ClCompile Include="enveloppe.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="point.cpp" />
+    <ClCompile Include="polygone.cpp" />
     <ClCompile Include="sommet.cpp" />
     <ClCompile Include="winbgi.cpp" />
   </ItemGroup>

@@ -1,76 +1,268 @@
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include <random>
+
 #include "graphics.h"
 #include "point.h"
 #include "affichage.h"
 #include "polygone.h"
 #include "sommet.h"
-#include <iostream>
+
 
 using namespace std;
 
 
-
-Sommet* fusionConvexes(Sommet* x, Sommet* y)
-{
+Sommet* fusionConvexes(Sommet* x, Sommet* y) {
     Sommet* a = x;
     Sommet* b = y;
-    //supportant bas
-    while (a->precedent()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == -1 || b->suivant()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == -1) {
 
+    //-cout<<"x:"<<x->coordonnees().x()<<"y :"<<y->coordonnees().x()<<endl;
 
+    Sommet* a1 = x;
+    Sommet* b1 = y;
+
+    if (a1->precedent()->coordonnees().aGauche(a1->coordonnees(), b1->coordonnees()) == 1) {
+        a1 = x->precedent();
+    }
+    if (b1->suivant()->coordonnees().aGauche(a1->coordonnees(), b1->coordonnees()) == 1) {
+        b1 = y->suivant();
+    }
+
+    //-cout<<"x1:"<<a1->coordonnees().x()<<"y1 :"<<y->coordonnees().x()<<endl;
+
+    while (a->suivant()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == -1 ||
+        b->precedent()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == -1) {
         //test si le sommet a précédent est à droite de (ab)
-        if (a->precedent()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == -1)
+       //     cout<<"ieme iter"<<b->suivant()->coordonnees().x()<<" "<<a->coordonnees().x()<<" "<<b->coordonnees().x()<<endl;
+    // cout<<"ieme iter"<<b->suivant()->coordonnees().aGauche(a->coordonnees(), b->coordonnees())<<endl;
+
+        if (a->suivant()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == -1)
         {
-            a = a->precedent();
+            a = a->suivant();
         }
 
         //test si le sommet b précédent est à droite de (ab)
-        if (b->suivant()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == -1)
+        if (b->precedent()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == -1)
         {
-            b = b->suivant();
+            b = b->precedent();
         }
     }
 
-    b->setPrecedent(a);
-    a->setSuivant(b);
+    //-cout<<"a:"<<a->coordonnees().x()<<"b :"<<b->coordonnees().x()<<endl;
+  //cout<<"ieme iter"<<b->suivant()->coordonnees().aGauche(a->coordonnees(), b->coordonnees())<<endl;
 
-    b = x;
-    a = y;
-    //supportant haut
-    while (a->precedent()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == 0 || b->suivant()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == 0) {
+    //Lien du Bas
 
-
-        //test si le sommet a précédent est à droite de (ab)
-        if (a->precedent()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == 0)
-        {
-            a = a->precedent();
+    while (a1->precedent()->coordonnees().aGauche(a1->coordonnees(), b1->coordonnees()) == 1 || b1->suivant()->coordonnees().aGauche(a1->coordonnees(), b1->coordonnees()) == 1) {
+        if (a1->precedent()->coordonnees().aGauche(a1->coordonnees(), b1->coordonnees()) == 1) {
+            a1 = a1->precedent();
         }
-
-        //test si le sommet b précédent est à droite de (ab)
-        if (b->suivant()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == 0)
-        {
-            b = b->suivant();
+        if (b1->suivant()->coordonnees().aGauche(a1->coordonnees(), b1->coordonnees()) == 1) {
+            b1 = b1->suivant();
         }
     }
+    //-cout<<"a1:"<<a1->coordonnees().x()<<"b1 :"<<b1->coordonnees().x()<<endl;
 
-    b->setPrecedent(a);
-    a->setSuivant(b);
+
+    b->setSuivant(a);
+    a->setPrecedent(b);
+
+    //Lien du bas
+    a1->setSuivant(b1);
+    b1->setPrecedent(a1);
 
     return a;
 }
 
+
+Polygone lier2Sommet(vector<Point> t, int g, int d)
+{
+    Polygone poly{};
+    Sommet* minn = poly.ajouteSommet(t[g], nullptr);
+    Sommet* maxx = poly.ajouteSommet(t[d], minn);
+
+    poly.setMin(minn);
+    poly.setMax(maxx);
+
+    setcolor(BLUE);
+    trace(poly);
+    getch();
+
+    return poly;
+
+}
+
+Polygone lier3Sommet(vector<Point> t, int g, int d)
+{
+    Polygone poly{};
+    if (t[d].aGauche(t[g], t[g + 1]) == -1)
+    {
+        Sommet* minn = poly.ajouteSommet(t[g], nullptr);
+        Sommet* s1 = poly.ajouteSommet(t[g + 1], minn);
+        Sommet* maxx = poly.ajouteSommet(t[d], s1);
+
+        poly.setMin(minn);
+        poly.setMax(maxx);
+    }
+    else if (t[d].aGauche(t[g], t[g + 1]) == 1)
+    {
+        Sommet* minn = poly.ajouteSommet(t[g], nullptr);
+        Sommet* maxx = poly.ajouteSommet(t[d], minn);
+        Sommet* s1 = poly.ajouteSommet(t[g + 1], maxx);
+
+        poly.setMin(minn);
+        poly.setMax(maxx);
+    }
+    setcolor(BLUE);
+    trace(poly);
+    getch();
+
+    return poly;
+
+}
+
+Polygone enveloppe(vector<Point> t, int g, int d) {
+    cout << g << " : " << d << endl;
+    int diff = d - g;
+    if (diff > 2) {
+        int milieu = abs((g + d) / 2);
+        Polygone p = Polygone{ enveloppe(t,g,milieu) };
+
+        p.affiche();
+
+        Polygone p1 = Polygone{ enveloppe(t, milieu + 1, d) };
+
+        p1.affiche();
+
+
+        setcolor(GREEN);
+        Polygone pf = Polygone{ fusionConvexes(p.getMax(), p1.getMin()),p.getMin(),p1.getMax() };
+        trace(pf);
+        getch();
+        pf.affiche();
+
+        return pf;
+
+    }
+    else if (diff == 1) {
+        Polygone poly{};
+        Sommet* minn = poly.ajouteSommet(t[g], nullptr);
+        Sommet* maxx = poly.ajouteSommet(t[d], minn);
+
+        poly.setMin(minn);
+        poly.setMax(maxx);
+
+        setcolor(BLUE);
+        trace(poly);
+        getch();
+
+        return poly;
+
+        //return lier2Sommet(t, g, d);
+
+    }
+    else if (diff == 2) {
+        return lier3Sommet(t, g, d);
+    }
+}
+
+
+
+
+
+void genereCdG(const vector<Point>& tableauPoints, int g, int k, Point& cdg, vector<Point>& tableauCdG)
+{
+    if (k == 0)
+        tableauCdG.push_back(cdg);
+    else
+    {
+        for (int i = g; i <= tableauPoints.size() - k; i++)
+        {
+            cdg += tableauPoints[i];
+            genereCdG(tableauPoints, i + 1, k - 1, cdg, tableauCdG);
+            cdg -= tableauPoints[i];
+        }
+    }
+}
+
+vector<Point> genereCdG(const vector<Point>& tableauPoints, int k)
+{
+    vector<Point> tableauCdG;
+    if (k <= 0 || k > tableauPoints.size())
+        return tableauCdG;
+    long long taille = 1;
+    for (int i = tableauPoints.size(); i > tableauPoints.size() - k; i--)
+        taille *= i;
+    for (int i = 2; i <= k; i++)
+        taille /= i;
+    tableauCdG.reserve(taille);
+    Point cdg{ 0,0 };
+    genereCdG(tableauPoints, 0, k, cdg, tableauCdG);
+    return tableauCdG;
+}
+
+void test1()
+{
+    //  d'un générateur de nombres aléatoires
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(50, 300);
+
+    //  d'un vector de points
+    std::vector<Point> points;
+
+    // Remplissage du vector avec 16 points
+    for (int i = 0; i < 8; ++i)
+    {
+        points.emplace_back(dis(gen), dis(gen));
+    }
+    setcolor(RED);
+    for (const auto& point : points) {
+        
+        point.affiche();
+    }
+    getch();
+    int k = 2;
+    vector<Point> tab = genereCdG(points, 2);
+
+    // Tri du vector par ordre croissant des coordonnées x
+    std::sort(tab.begin(), tab.end());
+    setcolor(BLUE);
+    // Affichage des points
+    std::cout << "Points ordonnés par ordre croissant de leurs coordonnées x : \n";
+    for (const auto& point : tab)
+    {
+        std::cout << "Point (" << point.x() << ", " << point.y() << ")\n";
+        point.affiche(k);
+    }
+    getch();
+
+    enveloppe(tab, 0, tab.size() - 1);
+}
+
 int main()
 {
-    opengraphsize(1800,900);
-    setbkcolor(RED);
+    
+
+    opengraphsize(2500, 1500);
+    setbkcolor(WHITE);
     cleardevice();
     setcolor(BLUE);
 
+    test1();
+
+
+    getch();
+    closegraph();
+
+
+    /**
     //Déclaration de points
-    Point p1{100,100};
+    Point p1{200,100};
     Point p2{100,500};
-    Point p3{500,500};
-    Point p4{500,100};
+    Point p3{350,500};
+    Point p4{500,100};//plus a droite
 
     //Construction d'un polygone
     Polygone poly{};
@@ -80,10 +272,10 @@ int main()
     Sommet *prec4 = poly.ajouteSommet(p4,prec3);
     //poly.supprimeSommet(prec3);
 
-    Point p1a{ 150,150 };
-    Point p2a{ 150,550 };
-    Point p3a{ 550,550 };
-    Point p4a{ 550,150 };
+    Point p1a{ 550,150 };//plus a gauche
+    Point p2a{ 670,220 };
+    Point p3a{ 950,250 };
+    Point p4a{ 970,150 };
 
     Polygone poly1{};
     Sommet* prec1a = poly1.ajouteSommet(p1a, nullptr);
@@ -94,8 +286,18 @@ int main()
     
 
     trace(poly);
+    trace(poly1);
+    
+
+
 
     getch();
-    closegraph();
+    setcolor(YELLOW);
+
+
+    trace(Polygone{ fusionConvexes(prec4, prec1a) });
+    **/
+    
+   
 }
 

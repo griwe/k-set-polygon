@@ -24,13 +24,16 @@
     <ClCompile Include="winbgi.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Algorithmique Géométrique\TP1\enveloppe.cpp">
+    <ClCompile Include="enveloppe.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Algorithmique Géométrique\TP1\point.cpp">
+    <ClCompile Include="point.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Algorithmique Géométrique\TP1\polygone.cpp">
+    <ClCompile Include="sommet.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="polygone.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,10 +47,13 @@
     <ClInclude Include="point.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Algorithmique Géométrique\TP1\polygone.h">
+    <ClInclude Include="enveloppe.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Algorithmique Géométrique\TP1\enveloppe.h">
+    <ClInclude Include="polygone.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="sommet.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
