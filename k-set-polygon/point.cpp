@@ -41,11 +41,8 @@ void Point::operator-=(const Point& p)
 
 void Point::affiche() const
 {
-    circle(d_x*2, d_y*2, 3);
+    circle(d_x, d_y, 3);
 
 }
 
-void Point::affiche(int k) const
-{
-    circle(d_x, d_y, 2);
-}
+

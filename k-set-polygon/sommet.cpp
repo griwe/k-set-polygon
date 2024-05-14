@@ -18,3 +18,13 @@ void Sommet::setPrecedent(Sommet* precedent)
     this->d_precedent = precedent;
 }
 
+void Sommet::setAjouter(Point* ajouter)
+{
+    this->d_ajouter = ajouter;
+}
+
+void Sommet::setEnlever(Point* enlever)
+{
+    this->d_enlever = enlever;
+}
+

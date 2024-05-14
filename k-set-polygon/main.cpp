@@ -17,52 +17,52 @@ Sommet* fusionConvexes(Sommet* x, Sommet* y) {
     Sommet* a = x;
     Sommet* b = y;
 
-    //-cout<<"x:"<<x->coordonnees().x()<<"y :"<<y->coordonnees().x()<<endl;
+    //-cout<<"x:"<<x->cdg().x()<<"y :"<<y->cdg().x()<<endl;
 
     Sommet* a1 = x;
     Sommet* b1 = y;
 
-    if (a1->precedent()->coordonnees().aGauche(a1->coordonnees(), b1->coordonnees()) == 1) {
+    if (a1->precedent()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1) {
         a1 = x->precedent();
     }
-    if (b1->suivant()->coordonnees().aGauche(a1->coordonnees(), b1->coordonnees()) == 1) {
+    if (b1->suivant()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1) {
         b1 = y->suivant();
     }
 
-    //-cout<<"x1:"<<a1->coordonnees().x()<<"y1 :"<<y->coordonnees().x()<<endl;
+    //-cout<<"x1:"<<a1->cdg().x()<<"y1 :"<<y->cdg().x()<<endl;
 
-    while (a->suivant()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == -1 ||
-        b->precedent()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == -1) {
+    while (a->suivant()->cdg().aGauche(a->cdg(), b->cdg()) == -1 ||
+        b->precedent()->cdg().aGauche(a->cdg(), b->cdg()) == -1) {
         //test si le sommet a précédent est à droite de (ab)
-       //     cout<<"ieme iter"<<b->suivant()->coordonnees().x()<<" "<<a->coordonnees().x()<<" "<<b->coordonnees().x()<<endl;
-    // cout<<"ieme iter"<<b->suivant()->coordonnees().aGauche(a->coordonnees(), b->coordonnees())<<endl;
+       //     cout<<"ieme iter"<<b->suivant()->cdg().x()<<" "<<a->cdg().x()<<" "<<b->cdg().x()<<endl;
+    // cout<<"ieme iter"<<b->suivant()->cdg().aGauche(a->cdg(), b->cdg())<<endl;
 
-        if (a->suivant()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == -1)
+        if (a->suivant()->cdg().aGauche(a->cdg(), b->cdg()) == -1)
         {
             a = a->suivant();
         }
 
         //test si le sommet b précédent est à droite de (ab)
-        if (b->precedent()->coordonnees().aGauche(a->coordonnees(), b->coordonnees()) == -1)
+        if (b->precedent()->cdg().aGauche(a->cdg(), b->cdg()) == -1)
         {
             b = b->precedent();
         }
     }
 
-    //-cout<<"a:"<<a->coordonnees().x()<<"b :"<<b->coordonnees().x()<<endl;
-  //cout<<"ieme iter"<<b->suivant()->coordonnees().aGauche(a->coordonnees(), b->coordonnees())<<endl;
+    //-cout<<"a:"<<a->cdg().x()<<"b :"<<b->cdg().x()<<endl;
+  //cout<<"ieme iter"<<b->suivant()->cdg().aGauche(a->cdg(), b->cdg())<<endl;
 
     //Lien du Bas
 
-    while (a1->precedent()->coordonnees().aGauche(a1->coordonnees(), b1->coordonnees()) == 1 || b1->suivant()->coordonnees().aGauche(a1->coordonnees(), b1->coordonnees()) == 1) {
-        if (a1->precedent()->coordonnees().aGauche(a1->coordonnees(), b1->coordonnees()) == 1) {
+    while (a1->precedent()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1 || b1->suivant()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1) {
+        if (a1->precedent()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1) {
             a1 = a1->precedent();
         }
-        if (b1->suivant()->coordonnees().aGauche(a1->coordonnees(), b1->coordonnees()) == 1) {
+        if (b1->suivant()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1) {
             b1 = b1->suivant();
         }
     }
-    //-cout<<"a1:"<<a1->coordonnees().x()<<"b1 :"<<b1->coordonnees().x()<<endl;
+    //-cout<<"a1:"<<a1->cdg().x()<<"b1 :"<<b1->cdg().x()<<endl;
 
 
     b->setSuivant(a);
@@ -76,7 +76,7 @@ Sommet* fusionConvexes(Sommet* x, Sommet* y) {
 }
 
 
-Polygone lier2Sommet(vector<Point> t, int g, int d)
+Polygone lier2Sommet(vector<CentreDeGravite> t, int g, int d)
 {
     Polygone poly{};
     Sommet* minn = poly.ajouteSommet(t[g], nullptr);
@@ -93,7 +93,7 @@ Polygone lier2Sommet(vector<Point> t, int g, int d)
 
 }
 
-Polygone lier3Sommet(vector<Point> t, int g, int d)
+Polygone lier3Sommet(vector<CentreDeGravite> t, int g, int d)
 {
     Polygone poly{};
     if (t[d].aGauche(t[g], t[g + 1]) == -1)
@@ -122,7 +122,7 @@ Polygone lier3Sommet(vector<Point> t, int g, int d)
 
 }
 
-Polygone enveloppe(vector<Point> t, int g, int d) {
+Polygone enveloppe(vector<CentreDeGravite> t, int g, int d) {
     cout << g << " : " << d << endl;
     int diff = d - g;
     if (diff > 2) {
@@ -137,7 +137,8 @@ Polygone enveloppe(vector<Point> t, int g, int d) {
 
 
         setcolor(GREEN);
-        Polygone pf = Polygone{ fusionConvexes(p.getMax(), p1.getMin()),p.getMin(),p1.getMax() };
+        fusionConvexes(p.getMax(), p1.getMin());
+        Polygone pf = Polygone{ p.getMin(),p1.getMax() };
         trace(pf);
         getch();
         pf.affiche();
@@ -171,7 +172,7 @@ Polygone enveloppe(vector<Point> t, int g, int d) {
 
 
 
-void genereCdG(const vector<Point>& tableauPoints, int g, int k, Point& cdg, vector<Point>& tableauCdG)
+void genereCdG(const vector<Point>& tableauPoints, int g, int k, CentreDeGravite& cdg, vector<CentreDeGravite>& tableauCdG)
 {
     if (k == 0)
         tableauCdG.push_back(cdg);
@@ -180,15 +181,17 @@ void genereCdG(const vector<Point>& tableauPoints, int g, int k, Point& cdg, vec
         for (int i = g; i <= tableauPoints.size() - k; i++)
         {
             cdg += tableauPoints[i];
+            cdg.ajouterPoint(tableauPoints[i]); //je crois que c'est ca
             genereCdG(tableauPoints, i + 1, k - 1, cdg, tableauCdG);
+            cdg.pop_back();
             cdg -= tableauPoints[i];
         }
     }
 }
 
-vector<Point> genereCdG(const vector<Point>& tableauPoints, int k)
-{
-    vector<Point> tableauCdG;
+vector<CentreDeGravite> genereCdG(const vector<Point>& tableauPoints, int k)
+{ 
+    vector<CentreDeGravite> tableauCdG;
     if (k <= 0 || k > tableauPoints.size())
         return tableauCdG;
     long long taille = 1;
@@ -197,8 +200,10 @@ vector<Point> genereCdG(const vector<Point>& tableauPoints, int k)
     for (int i = 2; i <= k; i++)
         taille /= i;
     tableauCdG.reserve(taille);
-    Point cdg{ 0,0 };
+    CentreDeGravite cdg{};
     genereCdG(tableauPoints, 0, k, cdg, tableauCdG);
+    //    for (int i = 0; i < tableauCdG.size(); i++)
+    //        tableauCdG[i].cdg /= k;
     return tableauCdG;
 }
 
@@ -207,7 +212,7 @@ void test1()
     //  d'un générateur de nombres aléatoires
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(50, 300);
+    std::uniform_int_distribution<> dis(50, 800);
 
     //  d'un vector de points
     std::vector<Point> points;
@@ -224,21 +229,21 @@ void test1()
     }
     getch();
     int k = 2;
-    vector<Point> tab = genereCdG(points, 2);
+    vector<CentreDeGravite> tab = genereCdG(points, k);
 
     // Tri du vector par ordre croissant des coordonnées x
     std::sort(tab.begin(), tab.end());
     setcolor(BLUE);
     // Affichage des points
     std::cout << "Points ordonnés par ordre croissant de leurs coordonnées x : \n";
-    for (const auto& point : tab)
+    for (const auto& cdg : tab)
     {
-        std::cout << "Point (" << point.x() << ", " << point.y() << ")\n";
-        point.affiche(k);
+        std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
+        cdg.affiche();
     }
     getch();
 
-    enveloppe(tab, 0, tab.size() - 1);
+    //enveloppe(tab, 0, tab.size() - 1);
 }
 
 int main()

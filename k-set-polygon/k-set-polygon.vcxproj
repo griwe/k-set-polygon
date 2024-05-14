@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="affichage.cpp" />
+    <ClCompile Include="centreDeGravite.cpp" />
     <ClCompile Include="enveloppe.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="point.cpp" />
@@ -141,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="affichage.h" />
+    <ClInclude Include="centreDeGravite.h" />
     <ClInclude Include="enveloppe.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="point.h" />

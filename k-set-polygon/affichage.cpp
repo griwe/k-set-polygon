@@ -15,17 +15,17 @@ void segment(const Point & a, const Point & b)
 // trace le polygone P dans une fenêtre graphique
 void trace(const Polygone &P)
 {
-    Sommet *p = P.premier();
+    Sommet *p = P.getMin();
 
      if(p==nullptr)
         return;
 
     do
     {
-        segment(p->coordonnees(), p->suivant()->coordonnees());
+        segment(p->cdg(), p->suivant()->cdg());
         p = p->suivant();
 
-    }while(p !=  P.premier());
+    }while(p !=  P.getMin());
 }
 
 

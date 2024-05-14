@@ -19,17 +19,7 @@ Polygone::~Polygone()
     delete d_premier;
 }*/
 
-Polygone::Polygone(Sommet* premier)
-{
-    d_premier = premier;
-}
 
-Polygone::Polygone(Sommet* premier, Sommet* minn, Sommet* maxx)
-{
-    d_premier = premier;
-    d_min = minn;
-    d_max = maxx;
-}
 
 
 // Ajoute un nouveau sommet au polygone. Les coordonnées du sommet à ajouter sont celles du point p.
@@ -46,7 +36,7 @@ Sommet* Polygone::ajouteSommet(const Point& p, Sommet* sommetPrecedent)
         s->d_suivant = s;
         s->d_precedent = s;
 
-        d_premier = s;
+        
 
         return s;
     }
@@ -83,15 +73,6 @@ void Polygone::supprimeSommet(Sommet* s)
 
 }
 
-void Polygone::setMin(Sommet* s)
-{
-    d_min = s;
-}
-
-void Polygone::setMax(Sommet* s)
-{
-    d_max = s;
-}
 
 Sommet* Polygone::getMin()
 {
@@ -105,8 +86,8 @@ Sommet* Polygone::getMax()
 
 void Polygone::affiche()
 {
-    cout << "Min :" << d_min->coordonnees().x() << " -> suivant " << d_min->suivant()->coordonnees().x() << " -> suivant " << d_min->suivant()->suivant()->coordonnees().x() << endl;
-    cout << "Max :" << d_max->coordonnees().x() << " -> suivant " << d_max->suivant()->coordonnees().x() << " -> suivant " << d_max->suivant()->suivant()->coordonnees().x() << endl;
+    cout << "Min :" << d_min->cdg().x() << " -> suivant " << d_min->suivant()->cdg().x() << " -> suivant " << d_min->suivant()->suivant()->cdg().x() << endl;
+    cout << "Max :" << d_max->cdg().x() << " -> suivant " << d_max->suivant()->cdg().x() << " -> suivant " << d_max->suivant()->suivant()->cdg().x() << endl;
 
 }
 
