@@ -213,13 +213,49 @@ vector<CentreDeGravite> genereCdG(const vector<Point>& tableauPoints, int k)
 void diviserPourRegner(vector<Point> points, int g, int d, int k) {
     int diff = d - g;
 
-    if (diff == k + 1) {
+    if (diff <= k + 1) {
         vector<Point> slice(points.begin() + g, points.begin() + d + 1);
         vector<CentreDeGravite> tab = genereCdG(slice, k);
+        std::sort(tab.begin(), tab.end());
+        for (const auto& cdg : tab)
+        {
+            std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
+            cdg.affiche();
+        }
         enveloppe(tab, 0, tab.size() - 1);
     }
     else {
-        //diviserPourRegner(points, g, )
+        int milieu = abs((g + d) / 2);
+
+        if (k % 2 == 0) {
+            diviserPourRegner(points, g, milieu + (abs(k / 2))-1, k);
+            diviserPourRegner(points, milieu - (abs(k/2))+1, d, k);
+
+            vector<Point> slice(points.begin() + g, points.begin() + d + 1);
+            vector<CentreDeGravite> tab = genereCdG(slice, k);
+            std::sort(tab.begin(), tab.end());
+            for (const auto& cdg : tab)
+            {
+                std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
+                cdg.affiche();
+            }
+            enveloppe(tab, 0, tab.size() - 1);
+        }
+        else {
+            diviserPourRegner(points, g, milieu +abs( k / 2), k);
+            diviserPourRegner(points, milieu - abs(k/2) -1 , d, k);
+
+            vector<Point> slice(points.begin() + g, points.begin() + d + 1);
+            vector<CentreDeGravite> tab = genereCdG(slice, k);
+            std::sort(tab.begin(), tab.end());
+            for (const auto& cdg : tab)
+            {
+                std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
+                cdg.affiche();
+            }
+            enveloppe(tab, 0, tab.size() - 1);
+        }
+        
     }
 }
 
@@ -245,7 +281,10 @@ void test1()
     }
     getch();
 
+    setcolor(BLUE);
+    diviserPourRegner(points, 0, points.size()-1, 2);
 
+    /*
     int k = 2;
     vector<CentreDeGravite> tab = genereCdG(points, k);
 
@@ -260,8 +299,8 @@ void test1()
         cdg.affiche();
     }
     getch();
-
-    enveloppe(tab, 0, tab.size() - 1);
+    */
+    //enveloppe(tab, 0, tab.size() - 1);
 }
 
 int main()
