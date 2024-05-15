@@ -1,14 +1,13 @@
 #include "affichage.h"
-#include "point.h"
-#include "polygone.h"
-#include "graphics.h"
-#include <iostream>
-
 
 // trace un segment entre deux points a et b
-void segment(const Point & a, const Point & b)
+void segment(const CentreDeGravite & a, const CentreDeGravite & b)
 {
-    line(a.x(), a.y(), b.x(), b.y());
+    int k = a.taille();
+    std::cout<< "test :" << a.x() << ","<< a.y()<< "et k est : " << k << std::endl;
+    if (k != 0)
+        line(a.x() / k, a.y() / k, b.x() / k, b.y() / k);
+    
 }
 
 

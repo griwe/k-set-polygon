@@ -1,5 +1,12 @@
+#ifndef CENTREDEGRAVITE_H
+#define CENTREDEGRAVITE_H
+
+
+
 #include "point.h"
 #include <vector>
+#include "graphics.h"
+#include <iostream>
 
 
 
@@ -25,9 +32,13 @@ public:
         t_ensemble.pop_back();
     }
     
-    std::vector<Point> ensemble() { return t_ensemble; }
+    std::vector<Point> ensemble() const { return t_ensemble; }
+
+    int taille() const { return t_ensemble.size(); }
 
 private:
 	std::vector<Point> t_ensemble;
+
 };
 
+#endif

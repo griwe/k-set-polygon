@@ -125,6 +125,7 @@ Polygone lier3Sommet(vector<CentreDeGravite> t, int g, int d)
 Polygone enveloppe(vector<CentreDeGravite> t, int g, int d) {
     cout << g << " : " << d << endl;
     int diff = d - g;
+
     if (diff > 2) {
         int milieu = abs((g + d) / 2);
         Polygone p = Polygone{ enveloppe(t,g,milieu) };
@@ -138,6 +139,8 @@ Polygone enveloppe(vector<CentreDeGravite> t, int g, int d) {
 
         setcolor(GREEN);
         fusionConvexes(p.getMax(), p1.getMin());
+        cout << "--------------"<< p.getMin()->cdg().taille();
+       
         Polygone pf = Polygone{ p.getMin(),p1.getMax() };
         trace(pf);
         getch();
@@ -243,7 +246,7 @@ void test1()
     }
     getch();
 
-    //enveloppe(tab, 0, tab.size() - 1);
+    enveloppe(tab, 0, tab.size() - 1);
 }
 
 int main()

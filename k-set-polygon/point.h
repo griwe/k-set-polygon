@@ -22,7 +22,6 @@ public:
 	void operator-=(const Point& p);
 	
 	void affiche() const;
-	void affiche(int k) const;
 
 private:
     // coordonnées
