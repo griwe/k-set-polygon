@@ -28,7 +28,7 @@ Polygone::~Polygone()
 // Dans le premier cas, le nouveau sommet devient le successeur du sommet d’adresse sommetPrecedent.
 // Dans le deuxième cas, le nouveau sommet devient l’unique sommet du polygone.
 // Dans tous les cas, la méthode renvoie l’adresse du nouveau sommet.
-Sommet* Polygone::ajouteSommet(const Point& p, Sommet* sommetPrecedent)
+Sommet* Polygone::ajouteSommet(const CentreDeGravite& p, Sommet* sommetPrecedent)
 {
     if (sommetPrecedent == nullptr)
     {

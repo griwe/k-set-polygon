@@ -21,6 +21,8 @@ public:
 
     CentreDeGravite(const Point& p) : Point(p), t_ensemble() {}
 
+    //CentreDeGravite(CentreDeGravite& cdg) : Point{ cdg.x(),cdg.y()}, t_ensemble{cdg.ensemble()} {}
+
     // Méthode pour ajouter un point à l'ensemble
     void ajouterPoint(const Point& p) {
         t_ensemble.push_back(p);

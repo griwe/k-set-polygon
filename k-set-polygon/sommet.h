@@ -12,12 +12,15 @@ public:
 	Sommet() : d_suivant(nullptr), d_precedent(nullptr), d_ajouter(nullptr), d_enlever(nullptr) {}
 
 	// Constructeur à partir d'un point p
-	Sommet(const Point& p, Sommet* suivant = nullptr, Sommet* precedent = nullptr, Point* ajouter = nullptr, Point* enlever = nullptr)
+	/*Sommet(const Point& p, Sommet* suivant = nullptr, Sommet* precedent = nullptr, Point* ajouter = nullptr, Point* enlever = nullptr)
 		: d_cdg{ CentreDeGravite(p) }, d_suivant{ suivant }, d_precedent{ precedent }, d_ajouter(ajouter), d_enlever(enlever) {}
+	*/
+	Sommet(const CentreDeGravite& p, Sommet* suivant = nullptr, Sommet* precedent = nullptr, Point* ajouter = nullptr, Point* enlever = nullptr)
+		: d_cdg{ p }, d_suivant{ suivant }, d_precedent{ precedent }, d_ajouter(ajouter), d_enlever(enlever) {}
 
-	Sommet(const CentreDeGravite& cdg) : d_cdg(cdg), d_suivant(nullptr), d_precedent(nullptr), d_ajouter(nullptr), d_enlever(nullptr) {}
+	//Sommet(const CentreDeGravite& cdg) : d_cdg(cdg), d_suivant(nullptr), d_precedent(nullptr), d_ajouter(nullptr), d_enlever(nullptr) {}
 
-	Sommet(const CentreDeGravite& cdg, Sommet* suivant, Sommet* precedent, Point* ajouter, Point* enlever) : d_cdg(cdg), d_suivant(suivant), d_precedent(precedent), d_ajouter(ajouter), d_enlever(enlever) {}
+	//Sommet(const CentreDeGravite& cdg, Sommet* suivant, Sommet* precedent, Point* ajouter, Point* enlever) : d_cdg(cdg), d_suivant(suivant), d_precedent(precedent), d_ajouter(ajouter), d_enlever(enlever) {}
 	
 	Sommet(const Sommet& s) : d_cdg(s.cdg()), d_suivant(s.suivant()), d_precedent(s.precedent()), d_ajouter(s.ajouter()), d_enlever(s.enlever()) {}
 
@@ -37,7 +40,7 @@ private:
 	// constructeur à partir d'un point p
 	
 	// destructeur vide privé
-	~Sommet() = default;
+	//~Sommet() = default;
 
 	// coordonnées
 	CentreDeGravite d_cdg;

@@ -48,7 +48,7 @@ public:
 	// Dans le premier cas, le nouveau sommet devient le successeur du sommet d’adresse sommetPrecedent.
 	// Dans le deuxième cas, le nouveau sommet devient l’unique sommet du polygone.
 	// Dans tous les cas, la méthode renvoie l’adresse du nouveau sommet.
-	Sommet* ajouteSommet(const Point& p, Sommet* sommetPrecedent = nullptr);
+	Sommet* ajouteSommet(const CentreDeGravite& p, Sommet* sommetPrecedent = nullptr);
 
 	// Supprime le sommet d’adresse s du polygone.
 	// On suppose que s est effectivement présent dans le polygone.

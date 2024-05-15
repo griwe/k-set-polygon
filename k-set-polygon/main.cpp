@@ -210,6 +210,19 @@ vector<CentreDeGravite> genereCdG(const vector<Point>& tableauPoints, int k)
     return tableauCdG;
 }
 
+void diviserPourRegner(vector<Point> points, int g, int d, int k) {
+    int diff = d - g;
+
+    if (diff == k + 1) {
+        vector<Point> slice(points.begin() + g, points.begin() + d + 1);
+        vector<CentreDeGravite> tab = genereCdG(slice, k);
+        enveloppe(tab, 0, tab.size() - 1);
+    }
+    else {
+        //diviserPourRegner(points, g, )
+    }
+}
+
 void test1()
 {
     //  d'un générateur de nombres aléatoires
@@ -231,6 +244,8 @@ void test1()
         point.affiche();
     }
     getch();
+
+
     int k = 2;
     vector<CentreDeGravite> tab = genereCdG(points, k);
 
