@@ -86,8 +86,8 @@ Polygone lier2Sommet(vector<CentreDeGravite> t, int g, int d)
     poly.setMax(maxx);
 
     setcolor(BLUE);
-    trace(poly);
-    getch();
+    //trace(poly);
+    //getch();
 
     return poly;
 
@@ -115,8 +115,8 @@ Polygone lier3Sommet(vector<CentreDeGravite> t, int g, int d)
         poly.setMax(maxx);
     }
     setcolor(BLUE);
-    trace(poly);
-    getch();
+    //trace(poly);
+    //getch();
 
     return poly;
 
@@ -127,7 +127,7 @@ Polygone enveloppe(vector<CentreDeGravite> t, int g, int d) {
     int diff = d - g;
 
     if (diff > 2) {
-        int milieu = abs((g + d) / 2);
+        int milieu = (g + d) / 2;
         Polygone p = Polygone{ enveloppe(t,g,milieu) };
 
         p.affiche();
@@ -142,8 +142,8 @@ Polygone enveloppe(vector<CentreDeGravite> t, int g, int d) {
         cout << "--------------"<< p.getMin()->cdg().taille();
        
         Polygone pf = Polygone{ p.getMin(),p1.getMax() };
-        trace(pf);
-        getch();
+        //trace(pf);
+        //getch();
         pf.affiche();
 
         return pf;
@@ -158,8 +158,8 @@ Polygone enveloppe(vector<CentreDeGravite> t, int g, int d) {
         poly.setMax(maxx);
 
         setcolor(BLUE);
-        trace(poly);
-        getch();
+        //trace(poly);
+        //getch();
 
         return poly;
 
@@ -210,53 +210,35 @@ vector<CentreDeGravite> genereCdG(const vector<Point>& tableauPoints, int k)
     return tableauCdG;
 }
 
-void diviserPourRegner(vector<Point> points, int g, int d, int k) {
-    int diff = d - g;
+void diviserPourRegner(vector<Point> points, int g, int d, int k, int profondeur) {
+    
 
-    if (diff <= k + 1) {
-        vector<Point> slice(points.begin() + g, points.begin() + d + 1);
-        vector<CentreDeGravite> tab = genereCdG(slice, k);
-        std::sort(tab.begin(), tab.end());
-        for (const auto& cdg : tab)
-        {
-            std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
-            cdg.affiche();
-        }
-        enveloppe(tab, 0, tab.size() - 1);
+    if (d-g <= k+1) {
+       
     }
     else {
-        int milieu = abs((g + d) / 2);
+        int milieu = (g + d) / 2;
 
         if (k % 2 == 0) {
-            diviserPourRegner(points, g, milieu + (abs(k / 2))-1, k);
-            diviserPourRegner(points, milieu - (abs(k/2))+1, d, k);
-
-            vector<Point> slice(points.begin() + g, points.begin() + d + 1);
-            vector<CentreDeGravite> tab = genereCdG(slice, k);
-            std::sort(tab.begin(), tab.end());
-            for (const auto& cdg : tab)
-            {
-                std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
-                cdg.affiche();
-            }
-            enveloppe(tab, 0, tab.size() - 1);
+            diviserPourRegner(points, g, milieu + (k / 2)-1, k, profondeur+1);
+            diviserPourRegner(points, milieu - (k/2)+1, d, k, profondeur + 1);
         }
         else {
-            diviserPourRegner(points, g, milieu +abs( k / 2), k);
-            diviserPourRegner(points, milieu - abs(k/2) -1 , d, k);
-
-            vector<Point> slice(points.begin() + g, points.begin() + d + 1);
-            vector<CentreDeGravite> tab = genereCdG(slice, k);
-            std::sort(tab.begin(), tab.end());
-            for (const auto& cdg : tab)
-            {
-                std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
-                cdg.affiche();
-            }
-            enveloppe(tab, 0, tab.size() - 1);
-        }
-        
+            diviserPourRegner(points, g, milieu +( k / 2) , k, profondeur + 1);
+            diviserPourRegner(points, milieu - (k/2) +1, d, k, profondeur + 1);
+        }      
     }
+    setcolor(profondeur);
+    vector<Point> slice(points.begin() + g, points.begin() + d + 1);
+    vector<CentreDeGravite> tab = genereCdG(slice, k);
+    std::sort(tab.begin(), tab.end());
+    for (const auto& cdg : tab)
+    {
+        std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
+        cdg.affiche();
+    }
+    trace(enveloppe(tab, 0, tab.size() - 1));
+    getch();
 }
 
 void test1()
@@ -282,7 +264,8 @@ void test1()
     getch();
 
     setcolor(BLUE);
-    diviserPourRegner(points, 0, points.size()-1, 2);
+    std::sort(points.begin(), points.end());
+    diviserPourRegner(points, 0, points.size()-1, 2, 0);
 
     /*
     int k = 2;
