@@ -1,4 +1,4 @@
-#ifndef POINT_H
+ï»¿#ifndef POINT_H
 #define POINT_H
 
 class Point
@@ -6,25 +6,26 @@ class Point
 
 public:
 	// constructeurs
-	Point() : d_x{0},d_y{0} {}
-	Point(int x, int y) : d_x{x},d_y{y} {}
+	Point() : d_x{ 0 }, d_y{ 0 } {}
+	Point(int x, int y) : d_x{ x }, d_y{ y } {}
 	// accesseurs
-	int x() const {return d_x;}
-	int y() const {return d_y;}
-
-	// renvoie 1, -1 ou 0 selon que le point auquel la méthode est appliquée est
-	// à gauche de, à droite de, ou sur la droite (ab) orientée de a vers b.
-	int aGauche(const Point &a, const Point &b) const;
+	int x() const { return d_x; }
+	int y() const { return d_y; }
+	void setX(int x) { d_x = x; }
+	void setY(int y) { d_y = y; }
+	// renvoie 1, -1 ou 0 selon que le point auquel la mï¿½thode est appliquï¿½e est
+	// ï¿½ gauche de, ï¿½ droite de, ou sur la droite (ab) orientï¿½e de a vers b.
+	int aGauche(const Point& a, const Point& b) const;
 	bool operator<(const Point& a) const;
 
 	void operator+=(const Point& p);
 
 	void operator-=(const Point& p);
-	
+
 	void affiche() const;
 
 private:
-    // coordonnées
+	// coordonnï¿½es
 	int d_x, d_y;
 };
 

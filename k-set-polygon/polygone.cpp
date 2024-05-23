@@ -1,33 +1,17 @@
-#include "polygone.h"
+ï»¿#include "polygone.h"
 #include "point.h"
 #include <iostream>
 
 using namespace std;
 
-// Implémentation des méthodes de la classe Polygone
+std::vector<Point> Polygone::d_tous = std::vector<Point>();
 
-// destructeur
-/**
-Polygone::~Polygone()
-{
-    Sommet* s = d_premier->suivant();
-    while (s != d_premier)
-    {
-        supprimeSommet(s);
-        s = d_premier->suivant();
-    }
-    delete d_premier;
-}*/
-
-
-
-
-// Ajoute un nouveau sommet au polygone. Les coordonnées du sommet à ajouter sont celles du point p.
-// sommetPrecedent est soit un pointeur sur l’un des sommets déjà présents dans le polygone,
+// Ajoute un nouveau sommet au polygone. Les coordonnï¿½es du sommet ï¿½ ajouter sont celles du point p.
+// sommetPrecedent est soit un pointeur sur lï¿½un des sommets dï¿½jï¿½ prï¿½sents dans le polygone,
 // soit un pointeur nul si le polygone est vide.
-// Dans le premier cas, le nouveau sommet devient le successeur du sommet d’adresse sommetPrecedent.
-// Dans le deuxième cas, le nouveau sommet devient l’unique sommet du polygone.
-// Dans tous les cas, la méthode renvoie l’adresse du nouveau sommet.
+// Dans le premier cas, le nouveau sommet devient le successeur du sommet dï¿½adresse sommetPrecedent.
+// Dans le deuxiï¿½me cas, le nouveau sommet devient lï¿½unique sommet du polygone.
+// Dans tous les cas, la mï¿½thode renvoie lï¿½adresse du nouveau sommet.
 Sommet* Polygone::ajouteSommet(const CentreDeGravite& p, Sommet* sommetPrecedent)
 {
     if (sommetPrecedent == nullptr)
@@ -36,7 +20,7 @@ Sommet* Polygone::ajouteSommet(const CentreDeGravite& p, Sommet* sommetPrecedent
         s->d_suivant = s;
         s->d_precedent = s;
 
-        
+
 
         return s;
     }
@@ -52,13 +36,10 @@ Sommet* Polygone::ajouteSommet(const CentreDeGravite& p, Sommet* sommetPrecedent
 
         return s;
     }
-
-
 }
 
-
-// Supprime le sommet d’adresse s du polygone.
-// On suppose que s est effectivement présent dans le polygone.
+// Supprime le sommet dï¿½adresse s du polygone.
+// On suppose que s est effectivement prï¿½sent dans le polygone.
 void Polygone::supprimeSommet(Sommet* s)
 {
     if (s->precedent() == s)
@@ -84,10 +65,126 @@ Sommet* Polygone::getMax()
     return d_max;
 }
 
-void Polygone::affiche()
+void Polygone::affiche() const
 {
-    cout << "Min :" << d_min->cdg().x() << " -> suivant " << d_min->suivant()->cdg().x() << " -> suivant " << d_min->suivant()->suivant()->cdg().x() << endl;
-    cout << "Max :" << d_max->cdg().x() << " -> suivant " << d_max->suivant()->cdg().x() << " -> suivant " << d_max->suivant()->suivant()->cdg().x() << endl;
+    //cout << "Min :" << d_min->cdg().x() << " -> suivant " << d_min->suivant()->cdg().x() << " -> suivant " << d_min->suivant()->suivant()->cdg().x() << endl;
+    //cout << "Max :" << d_max->cdg().x() << " -> suivant " << d_max->suivant()->cdg().x() << " -> suivant " << d_max->suivant()->suivant()->cdg().x() << endl;
 
 }
+
+
+
+int Polygone::cptSommet() const
+{
+    Sommet* s = d_min;
+    int i = 0;
+
+    while (s != nullptr && s->suivant() != nullptr && s->suivant() != d_min)
+    {
+        //cout<< "x: "<<s->cdg().x()<< " , ";
+        s = s->suivant();
+        i++;
+    }
+    if (s != nullptr && s->suivant() != nullptr)
+    {
+        //cout<< "x: "<<s->cdg().x()<< " , ";
+        i++;
+    }
+    return i;
+}
+
+std::vector<int> Polygone::sommets() const
+{
+    Sommet* s = d_min;
+    std::vector<int> a;
+
+    while (s != nullptr && s->suivant() != nullptr && s->suivant() != d_min)
+    {
+        //cout<< "x: "<<s->cdg().x()<< " , ";
+        a.push_back(s->cdg().x());
+        s = s->suivant();
+    }
+    if (s != nullptr && s->suivant() != nullptr)
+    {
+        //cout<< "x: "<<s->cdg().x()<< " , ";
+        a.push_back(s->cdg().x());
+    }
+    return a;
+}
+
+
+int Polygone::trouverNv(const Polygone& p1, const Polygone& p2) const
+{
+    std::vector<int> a1 = p1.sommets();
+    std::vector<int> a2 = p2.sommets();
+    std::vector<int> a3 = sommets();
+    int k = 0;
+    bool t;
+
+    for (int i = 0; i < a3.size(); i++)
+    {
+        t = true;
+        for (int j = 0; j < a1.size(); j++)
+        {
+            if (a3[i] == a1[j])
+            {
+                k++;
+            }
+        }
+
+        for (int j = 0; j < a2.size(); j++)
+        {
+            if (a3[i] == a2[j])
+            {
+                k++;
+            }
+        }
+
+    }
+    return (a3.size() - k);
+}
+
+
+
+/*int Polygone::trouverNv2(const Polygone& p1,const Polygone& p2) const
+{
+
+  Sommet *s=d_min;
+  Sommet *sp1=p1.d_min;
+  Sommet *sp2=p2.d_min;
+
+  do
+  {
+       Sommet *sp1=p1.d_min;
+       Sommet *sp2=p2.d_min;
+
+       do
+       {
+           if(s->cdg().x() == sp1->cdg().x())
+           {
+               k++;
+           }
+           sp1=sp1->suivant();
+       }
+       while(sp1!=nullptr && sp1 != p1.d_min);
+
+       do
+       {
+           if(s->cdg().x() == sp2->cdg().x())
+           {
+               k++;
+           }
+           sp2=sp2->suivant();
+       }
+       while(sp2!=nullptr &&  sp2 != p2.d_min);
+
+       s=s->suivant();
+  }while(s!=nullptr &&  s!=d_min);
+
+   return (a3.size() - k);
+}
+
+*/
+
+
 

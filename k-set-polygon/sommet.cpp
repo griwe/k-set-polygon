@@ -4,8 +4,8 @@
 using namespace std;
 
 Sommet* Sommet::precedent() const
-{   
-     return this->d_precedent;   
+{
+    return this->d_precedent;
 }
 
 void Sommet::setSuivant(Sommet* suivant)
@@ -18,13 +18,12 @@ void Sommet::setPrecedent(Sommet* precedent)
     this->d_precedent = precedent;
 }
 
-void Sommet::setAjouter(Point* ajouter)
+void Sommet::setAjouter(int ajouter)
 {
     this->d_ajouter = ajouter;
 }
 
-void Sommet::setEnlever(Point* enlever)
+void Sommet::setEnlever(int enlever)
 {
     this->d_enlever = enlever;
 }
-

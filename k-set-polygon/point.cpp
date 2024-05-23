@@ -45,4 +45,3 @@ void Point::affiche() const
 
 }
 
-

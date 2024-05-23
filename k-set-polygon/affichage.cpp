@@ -1,32 +1,68 @@
 #include "affichage.h"
 
 // trace un segment entre deux points a et b
-void segment(const CentreDeGravite & a, const CentreDeGravite & b)
+void segment(const CentreDeGravite& a, const CentreDeGravite& b, int k)
 {
-    int k = a.taille();
     std::cout<< "test :" << a.x() << ","<< a.y()<< "et k est : " << k << std::endl;
+    
     if (k != 0)
         line(a.x() / k, a.y() / k, b.x() / k, b.y() / k);
-    
+
 }
 
 
 // trace le polygone P dans une fenêtre graphique
-void trace(const Polygone &P)
+void trace(const Polygone& P)
 {
-    Sommet *p = P.getMin();
+    Sommet* p = P.getMin();
+    vector<int> pActuel = P.getPointsMin();
+    CentreDeGravite actuel;
+    actuel = CentreDeGravite{ pActuel };
 
-     if(p==nullptr)
-        return;
+    actuel.affiche();
+    cout << "Le tableau pActuel contient : " << endl;
+    for (const auto a : pActuel) {
+        cout << a << endl;
+    }
 
-    do
+    if (p == nullptr || pActuel.empty())
     {
-        segment(p->cdg(), p->suivant()->cdg());
-        p = p->suivant();
+        cout << "hmm bizarre"<<endl;
+        return;
+    }
+        
 
-    }while(p !=  P.getMin());
+    if (p == p->suivant()) {
+        actuel.affiche(pActuel.size());
+    }
+    else
+    {
+        vector<int> pSuivant = pActuel;
+        CentreDeGravite suivant;
+
+        do
+        {
+            pSuivant.push_back(p->ajouter());
+            // Trouver l'élément dans le vecteur
+            auto it = std::find(pSuivant.begin(), pSuivant.end(), p->enlever());
+
+            // Si l'élément est trouvé, le supprimer
+            if (it != pSuivant.end()) {
+                pSuivant.erase(it);
+            }
+
+            suivant = CentreDeGravite{ pSuivant };
+
+            segment(actuel, suivant, pActuel.size());
+
+            p = p->suivant();
+            pActuel = pSuivant;
+            actuel = suivant;
+
+        } while (p != P.getMin());
+    }
+   
 }
-
 
 
 

@@ -1,23 +1,19 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <vector>
 #include <algorithm>
 #include <random>
-
 #include "graphics.h"
 #include "point.h"
 #include "affichage.h"
 #include "polygone.h"
 #include "sommet.h"
-
+#include <tuple>
 
 using namespace std;
-
 
 Sommet* fusionConvexes(Sommet* x, Sommet* y) {
     Sommet* a = x;
     Sommet* b = y;
-
-    //-cout<<"x:"<<x->cdg().x()<<"y :"<<y->cdg().x()<<endl;
 
     Sommet* a1 = x;
     Sommet* b1 = y;
@@ -29,29 +25,17 @@ Sommet* fusionConvexes(Sommet* x, Sommet* y) {
         b1 = y->suivant();
     }
 
-    //-cout<<"x1:"<<a1->cdg().x()<<"y1 :"<<y->cdg().x()<<endl;
-
     while (a->suivant()->cdg().aGauche(a->cdg(), b->cdg()) == -1 ||
         b->precedent()->cdg().aGauche(a->cdg(), b->cdg()) == -1) {
-        //test si le sommet a précédent est à droite de (ab)
-       //     cout<<"ieme iter"<<b->suivant()->cdg().x()<<" "<<a->cdg().x()<<" "<<b->cdg().x()<<endl;
-    // cout<<"ieme iter"<<b->suivant()->cdg().aGauche(a->cdg(), b->cdg())<<endl;
 
-        if (a->suivant()->cdg().aGauche(a->cdg(), b->cdg()) == -1)
-        {
+        if (a->suivant()->cdg().aGauche(a->cdg(), b->cdg()) == -1) {
             a = a->suivant();
         }
-
-        //test si le sommet b précédent est à droite de (ab)
-        if (b->precedent()->cdg().aGauche(a->cdg(), b->cdg()) == -1)
-        {
+        //test si le sommet b prï¿½cï¿½dent est ï¿½ droite de (ab)
+        if (b->precedent()->cdg().aGauche(a->cdg(), b->cdg()) == -1) {
             b = b->precedent();
         }
     }
-
-    //-cout<<"a:"<<a->cdg().x()<<"b :"<<b->cdg().x()<<endl;
-  //cout<<"ieme iter"<<b->suivant()->cdg().aGauche(a->cdg(), b->cdg())<<endl;
-
     //Lien du Bas
 
     while (a1->precedent()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1 || b1->suivant()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1) {
@@ -62,8 +46,6 @@ Sommet* fusionConvexes(Sommet* x, Sommet* y) {
             b1 = b1->suivant();
         }
     }
-    //-cout<<"a1:"<<a1->cdg().x()<<"b1 :"<<b1->cdg().x()<<endl;
-
 
     b->setSuivant(a);
     a->setPrecedent(b);
@@ -75,6 +57,25 @@ Sommet* fusionConvexes(Sommet* x, Sommet* y) {
     return a;
 }
 
+Polygone lier1Sommet(vector<CentreDeGravite> t, int g, int d)
+{
+    Polygone poly{};
+    Sommet* minn = poly.ajouteSommet(t[g], nullptr);
+
+    minn->setSuivant(minn);
+    minn->setPrecedent(minn);
+
+    poly.setMin(minn);
+    poly.setMax(minn);
+
+    setcolor(BLUE);
+    //trace(poly);
+    //getch();
+    poly.inialiserAjEnlP();
+    poly.setTMin(minn->cdg().ensemble());
+    poly.setTMax(minn->cdg().ensemble());
+    return poly;
+}
 
 Polygone lier2Sommet(vector<CentreDeGravite> t, int g, int d)
 {
@@ -88,9 +89,10 @@ Polygone lier2Sommet(vector<CentreDeGravite> t, int g, int d)
     setcolor(BLUE);
     //trace(poly);
     //getch();
-
+    poly.inialiserAjEnlP();
+    poly.setTMin(minn->cdg().ensemble());
+    poly.setTMax(maxx->cdg().ensemble());
     return poly;
-
 }
 
 Polygone lier3Sommet(vector<CentreDeGravite> t, int g, int d)
@@ -104,6 +106,9 @@ Polygone lier3Sommet(vector<CentreDeGravite> t, int g, int d)
 
         poly.setMin(minn);
         poly.setMax(maxx);
+
+        poly.setTMin(minn->cdg().ensemble());
+        poly.setTMax(maxx->cdg().ensemble());
     }
     else if (t[d].aGauche(t[g], t[g + 1]) == 1)
     {
@@ -113,67 +118,61 @@ Polygone lier3Sommet(vector<CentreDeGravite> t, int g, int d)
 
         poly.setMin(minn);
         poly.setMax(maxx);
+
+        poly.setTMin(minn->cdg().ensemble());
+        poly.setTMax(maxx->cdg().ensemble());
     }
     setcolor(BLUE);
     //trace(poly);
     //getch();
-
+    poly.inialiserAjEnlP();
+    
     return poly;
-
 }
 
 Polygone enveloppe(vector<CentreDeGravite> t, int g, int d) {
-    cout << g << " : " << d << endl;
     int diff = d - g;
 
     if (diff > 2) {
         int milieu = (g + d) / 2;
         Polygone p = Polygone{ enveloppe(t,g,milieu) };
-
         p.affiche();
 
         Polygone p1 = Polygone{ enveloppe(t, milieu + 1, d) };
-
         p1.affiche();
-
 
         setcolor(GREEN);
         fusionConvexes(p.getMax(), p1.getMin());
-        cout << "--------------"<< p.getMin()->cdg().taille();
-       
+
         Polygone pf = Polygone{ p.getMin(),p1.getMax() };
         //trace(pf);
         //getch();
         pf.affiche();
-
+        pf.inialiserAjEnlP();
         return pf;
-
     }
     else if (diff == 1) {
-        Polygone poly{};
-        Sommet* minn = poly.ajouteSommet(t[g], nullptr);
-        Sommet* maxx = poly.ajouteSommet(t[d], minn);
+        Polygone pf{};
+        Sommet* minn = pf.ajouteSommet(t[g], nullptr);
+        Sommet* maxx = pf.ajouteSommet(t[d], minn);
 
-        poly.setMin(minn);
-        poly.setMax(maxx);
+        pf.setMin(minn);
+        pf.setMax(maxx);
 
         setcolor(BLUE);
         //trace(poly);
         //getch();
-
-        return poly;
-
+        pf.inialiserAjEnlP();
+        return pf;
         //return lier2Sommet(t, g, d);
-
     }
     else if (diff == 2) {
         return lier3Sommet(t, g, d);
     }
+    else if (diff == 0) {
+        return lier1Sommet(t, g, d);
+    }
 }
-
-
-
-
 
 void genereCdG(const vector<Point>& tableauPoints, int g, int k, CentreDeGravite& cdg, vector<CentreDeGravite>& tableauCdG)
 {
@@ -184,7 +183,7 @@ void genereCdG(const vector<Point>& tableauPoints, int g, int k, CentreDeGravite
         for (int i = g; i <= tableauPoints.size() - k; i++)
         {
             cdg += tableauPoints[i];
-            cdg.ajouterPoint(tableauPoints[i]); //je crois que c'est ca
+            cdg.ajouterPoint(i); //je crois que c'est ca
             genereCdG(tableauPoints, i + 1, k - 1, cdg, tableauCdG);
             cdg.pop_back();
             cdg -= tableauPoints[i];
@@ -193,7 +192,7 @@ void genereCdG(const vector<Point>& tableauPoints, int g, int k, CentreDeGravite
 }
 
 vector<CentreDeGravite> genereCdG(const vector<Point>& tableauPoints, int k)
-{ 
+{
     vector<CentreDeGravite> tableauCdG;
     if (k <= 0 || k > tableauPoints.size())
         return tableauCdG;
@@ -210,40 +209,93 @@ vector<CentreDeGravite> genereCdG(const vector<Point>& tableauPoints, int k)
     return tableauCdG;
 }
 
-void diviserPourRegner(vector<Point> points, int g, int d, int k, int profondeur) {
-    
+Polygone caseDeBaseNEgalK() {
+    return Polygone{};
+}
 
-    if (d-g <= k+1) {
-       
-    }
-    else {
+Polygone diviserPourRegner(vector<Point> points, int g, int d, int k, int profondeur, int& compteur) {
+
+    Polygone p1 = Polygone{};
+    Polygone p2 = Polygone{};
+
+    if (!(d - g <= k))
+    {
         int milieu = (g + d) / 2;
 
         if (k % 2 == 0) {
-            diviserPourRegner(points, g, milieu + (k / 2)-1, k, profondeur+1);
-            diviserPourRegner(points, milieu - (k/2)+1, d, k, profondeur + 1);
+            int f = profondeur + 1;
+            p1.ConstructRecopie(diviserPourRegner(points, g, milieu + (k / 2) - 1, k, f, compteur));
+            p2.ConstructRecopie(diviserPourRegner(points, milieu - (k / 2) + 1, d, k, f, compteur));
         }
         else {
-            diviserPourRegner(points, g, milieu +( k / 2) , k, profondeur + 1);
-            diviserPourRegner(points, milieu - (k/2) +1, d, k, profondeur + 1);
-        }      
+            int f = profondeur + 1;
+            p1.ConstructRecopie(diviserPourRegner(points, g, milieu + (k / 2), k, f, compteur));
+            p2.ConstructRecopie(diviserPourRegner(points, milieu - (k / 2) + 1, d, k, f, compteur));
+        }
     }
+    else
+    {
+        if (d - g == k) {//n = k + 1 
+
+        }
+        else if (d - g == k - 1) { //n = k
+            //lier un sommet avec lui mÃªme et en faire un polygone
+        }
+    }
+
     setcolor(profondeur);
     vector<Point> slice(points.begin() + g, points.begin() + d + 1);
     vector<CentreDeGravite> tab = genereCdG(slice, k);
     std::sort(tab.begin(), tab.end());
     for (const auto& cdg : tab)
     {
-        std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
+        //std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
         cdg.affiche();
     }
-    trace(enveloppe(tab, 0, tab.size() - 1));
+    Polygone P{ enveloppe(tab, 0, tab.size() - 1) };
+
+    Sommet* p = P.getMin();
+
+    do
+    {
+        cout << "L'indice du point Ã  enlever est : "<<p->enlever()<<endl;
+        cout << "L'indice du point Ã  ajouter est : " << p->ajouter() << endl;
+
+        p = p->suivant();
+
+    } while (p != P.getMin());
+
+
+    cout << "--------------------------------------------------" << endl;
+    cout << endl << "Profondeur : " << profondeur << endl;
+    cout << "--------------------------------------------------" << endl;
+    int i1 = p1.cptSommet();
+    int i2 = p2.cptSommet();
+    int i3 = P.cptSommet();
+
+    if (i1 == 0) {
+        compteur += i3;
+        cout << "Construction d'un polygone de " << i3 << " sommets" << endl;
+    }
+    else {
+        compteur += P.trouverNv(p1, p2);
+        cout << "Fusion d'un polygone de " << i1 << " sommets et d'un deuxieme de " << i2 << " sommets, resultat : un polygone de " << i3 << " sommets" << endl;
+        cout << "Nouveaux sommets generes qui n'existaient pas : " << P.trouverNv(p1, p2) << endl << "--------------------------------------------------" << endl;
+    }
+    trace(P);
     getch();
+
+    return P;
 }
 
-void test1()
+int main()
 {
-    //  d'un générateur de nombres aléatoires
+    opengraphsize(2500, 1500);
+    setbkcolor(WHITE);
+    cleardevice();
+    setcolor(BLUE);
+
+    //  d'un gï¿½nï¿½rateur de nombres alï¿½atoires
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(50, 800);
@@ -258,91 +310,82 @@ void test1()
     }
     setcolor(RED);
     for (const auto& point : points) {
-        
+
         point.affiche();
     }
     getch();
 
     setcolor(BLUE);
     std::sort(points.begin(), points.end());
-    diviserPourRegner(points, 0, points.size()-1, 2, 0);
 
-    /*
-    int k = 2;
-    vector<CentreDeGravite> tab = genereCdG(points, k);
-
-    // Tri du vector par ordre croissant des coordonnées x
-    std::sort(tab.begin(), tab.end());
-    setcolor(BLUE);
-    // Affichage des points
-    std::cout << "Points ordonnés par ordre croissant de leurs coordonnées x : \n";
-    for (const auto& cdg : tab)
-    {
-        std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
-        cdg.affiche();
-    }
-    getch();
-    */
-    //enveloppe(tab, 0, tab.size() - 1);
-}
-
-int main()
-{
-    
-
-    opengraphsize(2500, 1500);
-    setbkcolor(WHITE);
-    cleardevice();
-    setcolor(BLUE);
-
-    test1();
-
-
+    Polygone p{};
+    p.bricolage(points);
+    int compteur = 0;
+    diviserPourRegner(Polygone::d_tous, 0, points.size() - 1, 2, 0, compteur);
+    cout << "Nombre de sommets calculÃ©s total : " << compteur << endl;
     getch();
     closegraph();
-
-
-    /**
-    //Déclaration de points
-    Point p1{200,100};
-    Point p2{100,500};
-    Point p3{350,500};
-    Point p4{500,100};//plus a droite
-
-    //Construction d'un polygone
-    Polygone poly{};
-    Sommet *prec1 = poly.ajouteSommet(p1,nullptr);
-    Sommet *prec2 = poly.ajouteSommet(p2,prec1);
-    Sommet *prec3 = poly.ajouteSommet(p3,prec2);
-    Sommet *prec4 = poly.ajouteSommet(p4,prec3);
-    //poly.supprimeSommet(prec3);
-
-    Point p1a{ 550,150 };//plus a gauche
-    Point p2a{ 670,220 };
-    Point p3a{ 950,250 };
-    Point p4a{ 970,150 };
-
-    Polygone poly1{};
-    Sommet* prec1a = poly1.ajouteSommet(p1a, nullptr);
-    Sommet* prec2a = poly1.ajouteSommet(p2a, prec1a);
-    Sommet* prec3a = poly1.ajouteSommet(p3a, prec2a);
-    Sommet* prec4a = poly1.ajouteSommet(p4a, prec3a);
-    
-    
-
-    trace(poly);
-    trace(poly1);
-    
-
-
-
-    getch();
-    setcolor(YELLOW);
-
-
-    trace(Polygone{ fusionConvexes(prec4, prec1a) });
-    **/
-    
-   
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

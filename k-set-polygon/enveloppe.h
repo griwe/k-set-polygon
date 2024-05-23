@@ -1,4 +1,4 @@
-#ifndef ENVELOPPE_H
+ï»¿#ifndef ENVELOPPE_H
 #define ENVELOPPE_H
 
 #include "point.h"
@@ -8,12 +8,12 @@
 
 using namespace std;
 
-// Construit dans le polygone P l’enveloppe convexe des trois points a,b,c. On suppose P initialement vide.
-// La fonction renvoie l’adresse du sommet de coordonnées c.
-Sommet* enveloppe(const Point &a, const Point &b, const Point &c, Polygone &P);
+// Construit dans le polygone P lï¿½enveloppe convexe des trois points a,b,c. On suppose P initialement vide.
+// La fonction renvoie lï¿½adresse du sommet de coordonnï¿½es c.
+Sommet* enveloppe(const Point& a, const Point& b, const Point& c, Polygone& P);
 
-// Construit dans le polygone P l’enveloppe convexe de l'ensemble de points donné dans T.
+// Construit dans le polygone P lï¿½enveloppe convexe de l'ensemble de points donnï¿½ dans T.
 // On suppose P initialement vide.
-void enveloppe(vector<Point>&T, Polygone &P);
+void enveloppe(vector<Point>& T, Polygone& P);
 
 #endif
