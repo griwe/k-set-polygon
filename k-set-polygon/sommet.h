@@ -40,30 +40,10 @@ public:
 	void setAjouter(int ajouter);
 	void setEnlever(int enlever);
 
-
-
-
-	bool contains(const vector<int> vec, const int indice) {
-		return std::find(vec.begin(), vec.end(), indice) != vec.end();
-	}
+	bool contains(const vector<int> vec, const int indice);
 	//Fonction qui retourne l'indice du point dans le tableau A que B ne possède pas
-	int retourneIndice(vector<int> a, vector<int> b) {
-		for (int i = 0; i < a.size(); i++) {
-			if (!contains(b, a[i])) {
-				return a[i];
-			}
-		}
-		return -1;
-	}
-	void inialiserAjEnl() {
-		int iAjouter, iEnlever;
-		iAjouter = retourneIndice(cdg().ensemble(), precedent()->cdg().ensemble());
-		iEnlever = retourneIndice(cdg().ensemble(), suivant()->cdg().ensemble());
-
-		d_ajouter = iAjouter;
-		d_enlever = iEnlever;
-		cout << "-----------------Pour le x : " << cdg().x() << "on a iAjouter : " << iAjouter << " et iEnlever : " << iEnlever << endl;
-	}
+	int retourneIndice(vector<int> a, vector<int> b);
+	void inialiserAjEnl();
 
 
 private:

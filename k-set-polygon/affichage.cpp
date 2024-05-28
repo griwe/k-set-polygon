@@ -23,10 +23,8 @@ void trace1(const Polygone& P)
 {
     setcolor(GREEN);
     Sommet* p = P.getMin();
-
     if (p == nullptr)
         return;
-
     do
     {
         segment1(p->cdg(), p->suivant()->cdg());
@@ -62,26 +60,22 @@ void trace(const Polygone& P)
     }
     else
     {
-        vector<int> pSuivant = pActuel;
         CentreDeGravite suivant;
-
         do
         {
-            pSuivant.push_back(p->suivant()->ajouter());
-            // Trouver l'élément dans le vecteur
-            auto it = std::find(pSuivant.begin(), pSuivant.end(), p->enlever());
-
-            // Si l'élément est trouvé, le supprimer
-            if (it != pSuivant.end()) {
-                pSuivant.erase(it);
+            int i = 0;
+            while (i < pActuel.size() && p->enlever() != pActuel[i] ) {
+                i = i + 1;
             }
-
-            suivant = CentreDeGravite{ pSuivant };
+            if (i != pActuel.size()) {
+                pActuel[i] = p->suivant()->ajouter();
+            }         
+            
+            suivant = CentreDeGravite{ pActuel };
 
             segment(actuel, suivant, pActuel.size());
             
             p = p->suivant();
-            pActuel = pSuivant;
             actuel = suivant;
 
         } while (p != P.getMin());

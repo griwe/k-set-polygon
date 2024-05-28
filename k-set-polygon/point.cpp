@@ -38,6 +38,12 @@ void Point::operator+=(const Point& p)
     d_y += p.y();
 }
 
+void Point::operator=(const Point& p)
+{
+    d_x = p.x();
+    d_y = p.y();
+}
+
 void Point::operator-=(const Point& p)
 {
     d_x -= p.x();

@@ -11,6 +11,7 @@
 
 using namespace std;
 
+
 Sommet* fusionConvexes(Sommet* x, Sommet* y) {
     Sommet* a = x;
     Sommet* b = y;
@@ -31,7 +32,7 @@ Sommet* fusionConvexes(Sommet* x, Sommet* y) {
         if (a->suivant()->cdg().aGauche(a->cdg(), b->cdg()) == -1) {
             a = a->suivant();
         }
-        //test si le sommet b pr�c�dent est � droite de (ab)
+        //test si le sommet b pr c dent est   droite de (ab)
         if (b->precedent()->cdg().aGauche(a->cdg(), b->cdg()) == -1) {
             b = b->precedent();
         }
@@ -71,7 +72,7 @@ Polygone lier1Sommet(vector<CentreDeGravite> t, int g, int d)
     setcolor(BLUE);
     //trace(poly);
     //getch();
-   
+
     return poly;
 }
 
@@ -87,7 +88,7 @@ Polygone lier2Sommet(vector<CentreDeGravite> t, int g, int d)
     setcolor(BLUE);
     //trace(poly);
     //getch();
-    
+
     return poly;
 }
 
@@ -121,7 +122,7 @@ Polygone lier3Sommet(vector<CentreDeGravite> t, int g, int d)
     setcolor(BLUE);
     //trace(poly);
     //getch();
-    
+
     return poly;
 }
 
@@ -191,7 +192,6 @@ void genereCdG(const vector<Point>& tableauPoints, int g, int k, CentreDeGravite
             genereCdG(tableauPoints, i + 1, k - 1, cdg, tableauCdG);
             cdg.pop_back();
             cdg -= tableauPoints[i];
-
         }
     }
 }
@@ -214,14 +214,79 @@ vector<CentreDeGravite> genereCdG(const vector<Point>& tableauPoints, int k)
     return tableauCdG;
 }
 
-Polygone caseDeBaseNEgalK() {
-    return Polygone{};
+vector<Point> aExclure(vector<Point>& vecp, const Point& p)
+{
+    int i = 0;
+    while (i < vecp.size() && !(vecp[i] == p))
+    {
+        i++;
+    }
+
+    vecp[i] = vecp[vecp.size() - 1];
+    vecp.pop_back();
+
+    return vecp;
+}
+
+
+Polygone Base(const vector<Point>& p1, int g, int d)
+{
+    vector<CentreDeGravite> p;
+    for (int i = 0; i < p1.size(); i++)
+    {
+        p.push_back(p1[i]);
+    }
+
+    Polygone enveloppeConvexe = Polygone{};
+    enveloppeConvexe = enveloppe(p, g, d);
+
+    Sommet* crt = enveloppeConvexe.getMin();
+    Sommet* prec = nullptr;
+
+    Polygone kset = Polygone{};
+
+    do
+    {
+        //Solution temporaire
+        vector<Point> slice(p1.begin() + g, p1.begin() + d + 1);
+        vector<Point> vec = aExclure(slice, crt->cdg());
+        vector<int> indice;
+
+        for (int i = 0; i < vec.size(); i++)
+        {
+            indice.push_back(trouverIndice(vec[i]));
+        }
+
+        CentreDeGravite c = CentreDeGravite{ indice };
+        /////////////////////////
+        prec = kset.ajouteSommet(c, prec);
+
+        prec->setEnlever(trouverIndice(crt->suivant()->cdg())); //chercher l'indice du point courant dans le tableau tous
+        prec->setAjouter(trouverIndice(crt->precedent()->cdg())); //chercher l'indice du point precedent dans le tableau tous
+
+        if (crt == enveloppeConvexe.getMin())
+        {
+            kset.setMax(prec);
+            kset.setTMax(indice);
+        }
+        else if (crt == enveloppeConvexe.getMax())
+        {
+            kset.setMin(prec);
+            kset.setTMin(indice);
+        }
+
+        crt = crt->suivant();
+    } while (crt != enveloppeConvexe.getMin());
+
+    return kset;
+
 }
 
 Polygone diviserPourRegner(vector<Point> points, int g, int d, int k, int profondeur, int& compteur) {
 
     Polygone p1 = Polygone{};
     Polygone p2 = Polygone{};
+    Polygone P;
 
     if (!(d - g <= k))
     {
@@ -238,35 +303,51 @@ Polygone diviserPourRegner(vector<Point> points, int g, int d, int k, int profon
             p1.ConstructRecopie(diviserPourRegner(points, g, milieu + (k / 2), k, f, compteur));
             p2.ConstructRecopie(diviserPourRegner(points, milieu - (k / 2) + 1, d, k, f, compteur));
         }
+
+        setcolor(profondeur);
+        vector<Point> slice(points.begin() + g, points.begin() + d + 1);
+        vector<CentreDeGravite> tab = genereCdG(slice, k);
+        std::sort(tab.begin(), tab.end());
+        for (const auto& cdg : tab)
+        {
+            //std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
+            cdg.affiche();
+        }
+        P = enveloppe(tab, 0, tab.size() - 1);
+        P.inialiserAjEnlP();
+        P.setTMin(P.getMin()->cdg().ensemble());
+        P.setTMax(P.getMax()->cdg().ensemble());
+
     }
     else
     {
-        if (d - g == k) {//n = k + 1 
-
+        if (d - g == k) {//n = k + 1
+            P = Base(points, g, d);
+            trace(P);
+            
         }
         else if (d - g == k - 1) { //n = k
             //lier un sommet avec lui même et en faire un polygone
+            setcolor(profondeur);
+            vector<Point> slice(points.begin() + g, points.begin() + d + 1);
+            vector<CentreDeGravite> tab = genereCdG(slice, k);
+            std::sort(tab.begin(), tab.end());
+            for (const auto& cdg : tab)
+            {
+                //std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
+                cdg.affiche();
+            }
+            P = enveloppe(tab, 0, tab.size() - 1);
+            P.inialiserAjEnlP();
+            P.setTMin(P.getMin()->cdg().ensemble());
+            P.setTMax(P.getMax()->cdg().ensemble());
         }
     }
 
-    setcolor(profondeur);
-    vector<Point> slice(points.begin() + g, points.begin() + d + 1);
-    vector<CentreDeGravite> tab = genereCdG(slice, k);
-    std::sort(tab.begin(), tab.end());
-    for (const auto& cdg : tab)
-    {
-        //std::cout << "Point (" << cdg.x() << ", " << cdg.y() << ")\n";
-        cdg.affiche();
-    }
-    Polygone P{ enveloppe(tab, 0, tab.size() - 1) };
-    P.inialiserAjEnlP();
-    P.setTMin(P.getMin()->cdg().ensemble());
-    P.setTMax(P.getMax()->cdg().ensemble());
     Sommet* p = P.getMin();
-
     do
     {
-        cout << "L'indice du point a enlever est : "<<p->enlever()<<endl;
+        cout << "L'indice du point a enlever est : " << p->enlever() << endl;
         cout << "L'indice du point a ajouter est : " << p->ajouter() << endl;
 
         p = p->suivant();
@@ -290,8 +371,12 @@ Polygone diviserPourRegner(vector<Point> points, int g, int d, int k, int profon
         cout << "Fusion d'un polygone de " << i1 << " sommets et d'un deuxieme de " << i2 << " sommets, resultat : un polygone de " << i3 << " sommets" << endl;
         cout << "Nouveaux sommets generes qui n'existaient pas : " << P.trouverNv(p1, p2) << endl << "--------------------------------------------------" << endl;
     }
-    trace1(P);
-    getch();
+
+
+
+
+    /*trace1(P);
+    getch();*/
     trace(P);
     getch();
 
@@ -307,7 +392,7 @@ int main()
     cleardevice();
     setcolor(BLUE);
 
-    //  d'un g�n�rateur de nombres al�atoires
+    //  d'un g n rateur de nombres al atoires
     std::random_device rd;
     std::mt19937 gen(12345);
     std::uniform_int_distribution<> dis(50, 800);
@@ -334,12 +419,11 @@ int main()
     p.bricolage(points);
     int compteur = 0;
     Polygone ksetPolygone{ diviserPourRegner(Polygone::d_tous, 0, points.size() - 1, 2, 0, compteur) };
-    
+
     cout << "Nombre de sommets calculés total : " << compteur << endl;
     getch();
     closegraph();
 }
-
 
 
 
