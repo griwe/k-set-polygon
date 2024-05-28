@@ -167,6 +167,17 @@ Polygone enveloppe(vector<CentreDeGravite> t, int g, int d) {
     }
 }
 
+int trouverIndice(const Point& p) {
+    for (int i = 0; i < Polygone::d_tous.size(); i++)
+    {
+        if (Polygone::d_tous[i] == p)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
 void genereCdG(const vector<Point>& tableauPoints, int g, int k, CentreDeGravite& cdg, vector<CentreDeGravite>& tableauCdG)
 {
     if (k == 0)
@@ -176,10 +187,11 @@ void genereCdG(const vector<Point>& tableauPoints, int g, int k, CentreDeGravite
         for (int i = g; i <= tableauPoints.size() - k; i++)
         {
             cdg += tableauPoints[i];
-            cdg.ajouterPoint(i); //je crois que c'est ca
+            cdg.ajouterPoint(trouverIndice(tableauPoints[i])); //je crois que c'est ca
             genereCdG(tableauPoints, i + 1, k - 1, cdg, tableauCdG);
             cdg.pop_back();
             cdg -= tableauPoints[i];
+
         }
     }
 }
@@ -279,8 +291,11 @@ Polygone diviserPourRegner(vector<Point> points, int g, int d, int k, int profon
         cout << "Nouveaux sommets generes qui n'existaient pas : " << P.trouverNv(p1, p2) << endl << "--------------------------------------------------" << endl;
     }
     trace1(P);
-    //trace(P);
     getch();
+    trace(P);
+    getch();
+
+    int q = 0;
 
     return P;
 }

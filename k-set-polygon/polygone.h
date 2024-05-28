@@ -98,7 +98,7 @@ private:
 	// un sommet quelconque du polygone. nullptr si le polygone est vide
 
 	Sommet* d_min;
-	Sommet* d_max;
+	Sommet* d_max; 
 	std::vector<int> t_min;
 	std::vector<int> t_max;
 

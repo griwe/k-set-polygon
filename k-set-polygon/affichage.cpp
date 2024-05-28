@@ -79,7 +79,7 @@ void trace(const Polygone& P)
             suivant = CentreDeGravite{ pSuivant };
 
             segment(actuel, suivant, pActuel.size());
-            getch();
+            
             p = p->suivant();
             pActuel = pSuivant;
             actuel = suivant;

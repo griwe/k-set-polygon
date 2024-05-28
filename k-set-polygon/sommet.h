@@ -73,7 +73,7 @@ private:
 	//~Sommet() = default;
 
 	// coordonn�es
-	CentreDeGravite d_cdg;
+	CentreDeGravite d_cdg; // on veut pas savoir ca
 	// sommets suivant et precedent
 	Sommet* d_suivant, * d_precedent;
 	int d_ajouter, d_enlever; //calculer les coordonnées 

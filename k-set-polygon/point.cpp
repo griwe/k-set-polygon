@@ -27,6 +27,11 @@ bool Point::operator<(const Point& a) const
     return d_x < a.x();
 }
 
+bool Point::operator==(const Point& a) const
+{
+    return (d_x == a.x() && d_y == a.y());
+}
+
 void Point::operator+=(const Point& p)
 {
     d_x += p.x();
