@@ -10,10 +10,35 @@ void segment(const CentreDeGravite& a, const CentreDeGravite& b, int k)
 
 }
 
+void segment1(const CentreDeGravite& a, const CentreDeGravite& b)
+{
+    int k = a.taille();
+    std::cout << "test :" << a.x() << "," << a.y() << "et k est : " << k << std::endl;
+    if (k != 0)
+        line(a.x() / k, a.y() / k, b.x() / k, b.y() / k);
+
+}
+
+void trace1(const Polygone& P)
+{
+    setcolor(GREEN);
+    Sommet* p = P.getMin();
+
+    if (p == nullptr)
+        return;
+
+    do
+    {
+        segment1(p->cdg(), p->suivant()->cdg());
+        p = p->suivant();
+
+    } while (p != P.getMin());
+}
 
 // trace le polygone P dans une fenêtre graphique
 void trace(const Polygone& P)
 {
+    setcolor(BLUE);
     Sommet* p = P.getMin();
     vector<int> pActuel = P.getPointsMin();
     CentreDeGravite actuel;
@@ -42,7 +67,7 @@ void trace(const Polygone& P)
 
         do
         {
-            pSuivant.push_back(p->ajouter());
+            pSuivant.push_back(p->suivant()->ajouter());
             // Trouver l'élément dans le vecteur
             auto it = std::find(pSuivant.begin(), pSuivant.end(), p->enlever());
 
@@ -54,7 +79,7 @@ void trace(const Polygone& P)
             suivant = CentreDeGravite{ pSuivant };
 
             segment(actuel, suivant, pActuel.size());
-
+            getch();
             p = p->suivant();
             pActuel = pSuivant;
             actuel = suivant;

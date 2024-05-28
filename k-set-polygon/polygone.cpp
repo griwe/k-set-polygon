@@ -118,6 +118,26 @@ int Polygone::trouverNv(const Polygone& p1, const Polygone& p2) const
     std::vector<int> a1 = p1.sommets();
     std::vector<int> a2 = p2.sommets();
     std::vector<int> a3 = sommets();
+    cout << "-----------------------------------" << endl;
+    for (int i = 0; i < a1.size(); i++)
+    {
+        cout << a1[i] << ",";
+    }
+    cout << endl;
+    for (int i = 0; i < a2.size(); i++)
+    {
+        cout << a2[i] << ",";
+    }
+    cout << endl;
+
+    for (int i = 0; i < a3.size(); i++)
+    {
+        cout << a3[i] << ",";
+    }
+    cout << endl;
+    cout << "-----------------------------------" << endl;
+
+
     int k = 0;
     bool t;
 

@@ -50,7 +50,7 @@ public:
 	int retourneIndice(vector<int> a, vector<int> b) {
 		for (int i = 0; i < a.size(); i++) {
 			if (!contains(b, a[i])) {
-				return i;
+				return a[i];
 			}
 		}
 		return -1;
@@ -62,6 +62,7 @@ public:
 
 		d_ajouter = iAjouter;
 		d_enlever = iEnlever;
+		cout << "-----------------Pour le x : " << cdg().x() << "on a iAjouter : " << iAjouter << " et iEnlever : " << iEnlever << endl;
 	}
 
 

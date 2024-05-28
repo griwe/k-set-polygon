@@ -71,9 +71,7 @@ Polygone lier1Sommet(vector<CentreDeGravite> t, int g, int d)
     setcolor(BLUE);
     //trace(poly);
     //getch();
-    poly.inialiserAjEnlP();
-    poly.setTMin(minn->cdg().ensemble());
-    poly.setTMax(minn->cdg().ensemble());
+   
     return poly;
 }
 
@@ -89,9 +87,7 @@ Polygone lier2Sommet(vector<CentreDeGravite> t, int g, int d)
     setcolor(BLUE);
     //trace(poly);
     //getch();
-    poly.inialiserAjEnlP();
-    poly.setTMin(minn->cdg().ensemble());
-    poly.setTMax(maxx->cdg().ensemble());
+    
     return poly;
 }
 
@@ -107,8 +103,8 @@ Polygone lier3Sommet(vector<CentreDeGravite> t, int g, int d)
         poly.setMin(minn);
         poly.setMax(maxx);
 
-        poly.setTMin(minn->cdg().ensemble());
-        poly.setTMax(maxx->cdg().ensemble());
+        //poly.setTMin(minn->cdg().ensemble());
+        //poly.setTMax(maxx->cdg().ensemble());
     }
     else if (t[d].aGauche(t[g], t[g + 1]) == 1)
     {
@@ -119,13 +115,12 @@ Polygone lier3Sommet(vector<CentreDeGravite> t, int g, int d)
         poly.setMin(minn);
         poly.setMax(maxx);
 
-        poly.setTMin(minn->cdg().ensemble());
-        poly.setTMax(maxx->cdg().ensemble());
+        //poly.setTMin(minn->cdg().ensemble());
+        //poly.setTMax(maxx->cdg().ensemble());
     }
     setcolor(BLUE);
     //trace(poly);
     //getch();
-    poly.inialiserAjEnlP();
     
     return poly;
 }
@@ -148,7 +143,6 @@ Polygone enveloppe(vector<CentreDeGravite> t, int g, int d) {
         //trace(pf);
         //getch();
         pf.affiche();
-        pf.inialiserAjEnlP();
         return pf;
     }
     else if (diff == 1) {
@@ -162,7 +156,6 @@ Polygone enveloppe(vector<CentreDeGravite> t, int g, int d) {
         setcolor(BLUE);
         //trace(poly);
         //getch();
-        pf.inialiserAjEnlP();
         return pf;
         //return lier2Sommet(t, g, d);
     }
@@ -224,7 +217,8 @@ Polygone diviserPourRegner(vector<Point> points, int g, int d, int k, int profon
 
         if (k % 2 == 0) {
             int f = profondeur + 1;
-            p1.ConstructRecopie(diviserPourRegner(points, g, milieu + (k / 2) - 1, k, f, compteur));
+            p1.ConstructRecopie(diviserPourRegner(points, g, milieu + (k / 2), k, f, compteur));
+            //p1.ConstructRecopie(diviserPourRegner(points, g, milieu + (k / 2) - 1, k, f, compteur));
             p2.ConstructRecopie(diviserPourRegner(points, milieu - (k / 2) + 1, d, k, f, compteur));
         }
         else {
@@ -253,13 +247,15 @@ Polygone diviserPourRegner(vector<Point> points, int g, int d, int k, int profon
         cdg.affiche();
     }
     Polygone P{ enveloppe(tab, 0, tab.size() - 1) };
-
+    P.inialiserAjEnlP();
+    P.setTMin(P.getMin()->cdg().ensemble());
+    P.setTMax(P.getMax()->cdg().ensemble());
     Sommet* p = P.getMin();
 
     do
     {
-        cout << "L'indice du point à enlever est : "<<p->enlever()<<endl;
-        cout << "L'indice du point à ajouter est : " << p->ajouter() << endl;
+        cout << "L'indice du point a enlever est : "<<p->enlever()<<endl;
+        cout << "L'indice du point a ajouter est : " << p->ajouter() << endl;
 
         p = p->suivant();
 
@@ -282,7 +278,8 @@ Polygone diviserPourRegner(vector<Point> points, int g, int d, int k, int profon
         cout << "Fusion d'un polygone de " << i1 << " sommets et d'un deuxieme de " << i2 << " sommets, resultat : un polygone de " << i3 << " sommets" << endl;
         cout << "Nouveaux sommets generes qui n'existaient pas : " << P.trouverNv(p1, p2) << endl << "--------------------------------------------------" << endl;
     }
-    trace(P);
+    trace1(P);
+    //trace(P);
     getch();
 
     return P;
@@ -297,7 +294,7 @@ int main()
 
     //  d'un g�n�rateur de nombres al�atoires
     std::random_device rd;
-    std::mt19937 gen(rd());
+    std::mt19937 gen(12345);
     std::uniform_int_distribution<> dis(50, 800);
 
     //  d'un vector de points
@@ -321,7 +318,8 @@ int main()
     Polygone p{};
     p.bricolage(points);
     int compteur = 0;
-    diviserPourRegner(Polygone::d_tous, 0, points.size() - 1, 2, 0, compteur);
+    Polygone ksetPolygone{ diviserPourRegner(Polygone::d_tous, 0, points.size() - 1, 2, 0, compteur) };
+    
     cout << "Nombre de sommets calculés total : " << compteur << endl;
     getch();
     closegraph();

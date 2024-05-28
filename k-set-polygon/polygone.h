@@ -55,6 +55,7 @@ public:
 		do
 		{
 			m->inialiserAjEnl();
+			m = m->suivant();
 		} while (m != nullptr && m != d_min);
 	}
 
