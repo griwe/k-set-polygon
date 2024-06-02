@@ -52,7 +52,7 @@ void Point::operator-=(const Point& p)
 
 void Point::affiche() const
 {
-    circle(d_x, d_y, 3);
+    circle(d_x,1000- d_y, 3);
 
 }
 

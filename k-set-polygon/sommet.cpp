@@ -33,6 +33,7 @@ bool Sommet::contains(const vector<int> vec, const int indice)
 	return std::find(vec.begin(), vec.end(), indice) != vec.end();
 }
 
+
 int Sommet::retourneIndice(vector<int> a, vector<int> b)
 {
 	for (int i = 0; i < a.size(); i++) {
@@ -49,6 +50,6 @@ void Sommet::inialiserAjEnl()
 	iAjouter = retourneIndice(cdg().ensemble(), precedent()->cdg().ensemble());
 	iEnlever = retourneIndice(cdg().ensemble(), suivant()->cdg().ensemble());
 
-	d_ajouter = iAjouter;
-	d_enlever = iEnlever;
+	 d_ajouter = iAjouter;
+	 d_enlever = iEnlever;
 }

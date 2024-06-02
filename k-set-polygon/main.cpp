@@ -19,31 +19,31 @@ Sommet* fusionConvexes(Sommet* x, Sommet* y) {
     Sommet* a1 = x;
     Sommet* b1 = y;
 
-    if (a1->precedent()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1) {
+    if (a1->precedent()->cdg().aGauche(a1->cdg(), b1->cdg()) == -1) {
         a1 = x->precedent();
     }
-    if (b1->suivant()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1) {
+    if (b1->suivant()->cdg().aGauche(a1->cdg(), b1->cdg()) == -1) {
         b1 = y->suivant();
     }
 
-    while (a->suivant()->cdg().aGauche(a->cdg(), b->cdg()) == -1 ||
-        b->precedent()->cdg().aGauche(a->cdg(), b->cdg()) == -1) {
+    while (a->suivant()->cdg().aGauche(a->cdg(), b->cdg()) == 1 ||
+        b->precedent()->cdg().aGauche(a->cdg(), b->cdg()) == 1) {
 
-        if (a->suivant()->cdg().aGauche(a->cdg(), b->cdg()) == -1) {
+        if (a->suivant()->cdg().aGauche(a->cdg(), b->cdg()) == 1) {
             a = a->suivant();
         }
         //test si le sommet b pr c dent est   droite de (ab)
-        if (b->precedent()->cdg().aGauche(a->cdg(), b->cdg()) == -1) {
+        if (b->precedent()->cdg().aGauche(a->cdg(), b->cdg()) == 1) {
             b = b->precedent();
         }
     }
     //Lien du Bas
 
-    while (a1->precedent()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1 || b1->suivant()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1) {
-        if (a1->precedent()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1) {
+    while (a1->precedent()->cdg().aGauche(a1->cdg(), b1->cdg()) == -1 || b1->suivant()->cdg().aGauche(a1->cdg(), b1->cdg()) == -1) {
+        if (a1->precedent()->cdg().aGauche(a1->cdg(), b1->cdg()) == -1) {
             a1 = a1->precedent();
         }
-        if (b1->suivant()->cdg().aGauche(a1->cdg(), b1->cdg()) == 1) {
+        if (b1->suivant()->cdg().aGauche(a1->cdg(), b1->cdg()) == -1) {
             b1 = b1->suivant();
         }
     }
@@ -56,6 +56,58 @@ Sommet* fusionConvexes(Sommet* x, Sommet* y) {
     b1->setPrecedent(a1);
 
     return a;
+}
+
+Polygone fusionConvexeKset(Polygone g, Polygone d) {
+    Sommet* actuelG = g.getMax(), * actuelD = d.getMin();
+    int nonCommunD = actuelG->retourneIndice(d.getPointsMin(), g.getPointsMax());
+    int nonCommunG = actuelG->retourneIndice(g.getPointsMax(), d.getPointsMin());
+    
+    //sens de la montée 
+     while (Polygone::d_tous[nonCommunD].aGauche(Polygone::d_tous[actuelG->enlever()], Polygone::d_tous[actuelG->suivant()->ajouter()]) == -1 || 
+        Polygone::d_tous[nonCommunG].aGauche(Polygone::d_tous[actuelD->ajouter()], Polygone::d_tous[actuelD->precedent()->enlever()]) == 1) {
+
+        //polygone de gauche
+        while (Polygone::d_tous[nonCommunD].aGauche(Polygone::d_tous[actuelG->enlever()], Polygone::d_tous[actuelG->suivant()->ajouter()]) == -1) {
+            actuelG = actuelG->suivant();
+            nonCommunG = actuelG->ajouter();
+        }
+
+        //polygone de droite
+        while (Polygone::d_tous[nonCommunG].aGauche(Polygone::d_tous[actuelD->ajouter()], Polygone::d_tous[actuelD->precedent()->enlever()]) == 1) {
+            actuelD = actuelD->precedent();
+            nonCommunD = actuelD->ajouter();
+        }
+    }
+    Sommet* hautG = actuelG, * hautD = actuelD;
+    actuelG = g.getMax();
+    actuelD = d.getMin();
+    nonCommunD = actuelG->retourneIndice(d.getPointsMin(), g.getPointsMax());
+    nonCommunG = actuelG->retourneIndice(g.getPointsMax(), d.getPointsMin());
+
+    while (Polygone::d_tous[nonCommunD].aGauche(Polygone::d_tous[actuelG->precedent()->ajouter()], Polygone::d_tous[actuelG->precedent()->enlever()]) == 1 ||
+        Polygone::d_tous[nonCommunG].aGauche(Polygone::d_tous[actuelD->enlever()], Polygone::d_tous[actuelD->suivant()->enlever()]) == 1) {
+        
+        //polygone de gauche
+        while (Polygone::d_tous[nonCommunD].aGauche(Polygone::d_tous[actuelG->precedent()->ajouter()], Polygone::d_tous[actuelG->precedent()->enlever()]) == 1) {
+            actuelG = actuelG->precedent();
+            nonCommunG = actuelG->enlever();
+        }
+
+        //polygone de droite
+        while (Polygone::d_tous[nonCommunG].aGauche(Polygone::d_tous[actuelD->enlever()], Polygone::d_tous[actuelD->suivant()->enlever()]) == 1) {
+            actuelD = actuelD->suivant();
+            nonCommunD = actuelD->ajouter();
+        }
+    }
+
+    Sommet* basG = actuelG, * basD = actuelD;
+
+    circle(hautG->cdg().x()/2, 1000 -( hautG->cdg().y() / 2), 6);
+    circle(hautD->cdg().x() / 2, 1000 - (hautD->cdg().y() / 2), 6);
+    circle(basG->cdg().x() / 2, 1000 - (basG->cdg().y() / 2), 6);
+    circle(basD->cdg().x() / 2, 1000 - (basD->cdg().y() / 2), 6);
+    return Polygone{};
 }
 
 Polygone lier1Sommet(vector<CentreDeGravite> t, int g, int d)
@@ -95,7 +147,7 @@ Polygone lier2Sommet(vector<CentreDeGravite> t, int g, int d)
 Polygone lier3Sommet(vector<CentreDeGravite> t, int g, int d)
 {
     Polygone poly{};
-    if (t[d].aGauche(t[g], t[g + 1]) == -1)
+    if (t[d].aGauche(t[g], t[g + 1]) == 1)
     {
         Sommet* minn = poly.ajouteSommet(t[g], nullptr);
         Sommet* s1 = poly.ajouteSommet(t[g + 1], minn);
@@ -107,7 +159,7 @@ Polygone lier3Sommet(vector<CentreDeGravite> t, int g, int d)
         //poly.setTMin(minn->cdg().ensemble());
         //poly.setTMax(maxx->cdg().ensemble());
     }
-    else if (t[d].aGauche(t[g], t[g + 1]) == 1)
+    else if (t[d].aGauche(t[g], t[g + 1]) == -1)
     {
         Sommet* minn = poly.ajouteSommet(t[g], nullptr);
         Sommet* maxx = poly.ajouteSommet(t[d], minn);
@@ -288,14 +340,14 @@ Polygone diviserPourRegner(vector<Point> points, int g, int d, int k, int profon
     Polygone p2 = Polygone{};
     Polygone P;
 
-    if (!(d - g <= k))
+    if (!(d - g <= k ))
     {
         int milieu = (g + d) / 2;
 
         if (k % 2 == 0) {
             int f = profondeur + 1;
-            p1.ConstructRecopie(diviserPourRegner(points, g, milieu + (k / 2), k, f, compteur));
-            //p1.ConstructRecopie(diviserPourRegner(points, g, milieu + (k / 2) - 1, k, f, compteur));
+            //p1.ConstructRecopie(diviserPourRegner(points, g, milieu + (k / 2), k, f, compteur));
+            p1.ConstructRecopie(diviserPourRegner(points, g, milieu + (k / 2) - 1, k, f, compteur));
             p2.ConstructRecopie(diviserPourRegner(points, milieu - (k / 2) + 1, d, k, f, compteur));
         }
         else {
@@ -317,6 +369,7 @@ Polygone diviserPourRegner(vector<Point> points, int g, int d, int k, int profon
         P.inialiserAjEnlP();
         P.setTMin(P.getMin()->cdg().ensemble());
         P.setTMax(P.getMax()->cdg().ensemble());
+        
 
     }
     else
@@ -387,7 +440,7 @@ Polygone diviserPourRegner(vector<Point> points, int g, int d, int k, int profon
 
 int main()
 {
-    opengraphsize(2500, 1500);
+    opengraphsize(2500, 1000);
     setbkcolor(WHITE);
     cleardevice();
     setcolor(BLUE);
@@ -418,9 +471,16 @@ int main()
     Polygone p{};
     p.bricolage(points);
     int compteur = 0;
-    Polygone ksetPolygone{ diviserPourRegner(Polygone::d_tous, 0, points.size() - 1, 2, 0, compteur) };
-
+    Polygone a = Polygone{ diviserPourRegner(Polygone::d_tous, 0, 3, 2, 0, compteur) };
+    Polygone b = Polygone{ diviserPourRegner(Polygone::d_tous, 3, 7, 2, 0, compteur) };
+    fusionConvexeKset(a, b);
     cout << "Nombre de sommets calculés total : " << compteur << endl;
+    getch();
+
+    
+
+
+    trace(diviserPourRegner(Polygone::d_tous, 0, 7, 2, 0, compteur));
     getch();
     closegraph();
 }

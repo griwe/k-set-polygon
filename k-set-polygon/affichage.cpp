@@ -6,7 +6,7 @@ void segment(const CentreDeGravite& a, const CentreDeGravite& b, int k)
     std::cout<< "test :" << a.x() << ","<< a.y()<< "et k est : " << k << std::endl;
     
     if (k != 0)
-        line(a.x() / k, a.y() / k, b.x() / k, b.y() / k);
+        line(a.x() / k, 1000 - (a.y() / k), b.x() / k, 1000 - (b.y() / k));
 
 }
 
@@ -15,7 +15,7 @@ void segment1(const CentreDeGravite& a, const CentreDeGravite& b)
     int k = a.taille();
     std::cout << "test :" << a.x() << "," << a.y() << "et k est : " << k << std::endl;
     if (k != 0)
-        line(a.x() / k, a.y() / k, b.x() / k, b.y() / k);
+        line(a.x() / k, 1000 -( a.y() / k), b.x() / k, 1000 -(b.y() / k));
 
 }
 

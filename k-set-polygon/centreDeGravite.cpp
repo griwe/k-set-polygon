@@ -24,5 +24,5 @@ void CentreDeGravite::affiche() const {
 }
 void CentreDeGravite::affiche(int k) const {
 
-	circle(x() / k, y() / k, 2);
+	circle(x() / k, 1000-( y() / k), 2);
 }
