@@ -58,55 +58,75 @@ Sommet* fusionConvexes(Sommet* x, Sommet* y) {
     return a;
 }
 
+bool aGauche(const vector<int> points, const Point& a, const Point& b) {
+    for (const auto p : points) {
+        int det = (b.x() - a.x()) * (Polygone::d_tous[p].y() - a.y()) - (Polygone::d_tous[p].x() - a.x()) * (b.y() - a.y());
+
+        if (det > 0)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 Polygone fusionConvexeKset(Polygone g, Polygone d) {
     Sommet* actuelG = g.getMax(), * actuelD = d.getMin();
-    int nonCommunD = actuelG->retourneIndice(d.getPointsMin(), g.getPointsMax());
-    int nonCommunG = actuelG->retourneIndice(g.getPointsMax(), d.getPointsMin());
+    vector<int> nonCommunD, nonCommunG;  
+    nonCommunD.push_back(actuelG->retourneIndice(d.getPointsMin(), g.getPointsMax()));
+    
+    nonCommunG.push_back(actuelG->retourneIndice(g.getPointsMax(), d.getPointsMin()));
     
     //sens de la montée 
-     while (Polygone::d_tous[nonCommunD].aGauche(Polygone::d_tous[actuelG->enlever()], Polygone::d_tous[actuelG->suivant()->ajouter()]) == -1 || 
-        Polygone::d_tous[nonCommunG].aGauche(Polygone::d_tous[actuelD->ajouter()], Polygone::d_tous[actuelD->precedent()->enlever()]) == 1) {
+     while (aGauche(nonCommunD, Polygone::d_tous[actuelG->enlever()], Polygone::d_tous[actuelG->suivant()->ajouter()]) ||
+         aGauche(nonCommunG, Polygone::d_tous[actuelD->ajouter()], Polygone::d_tous[actuelD->precedent()->enlever()]) ) {
 
         //polygone de gauche
-        while (Polygone::d_tous[nonCommunD].aGauche(Polygone::d_tous[actuelG->enlever()], Polygone::d_tous[actuelG->suivant()->ajouter()]) == -1) {
+        while (aGauche(nonCommunD, Polygone::d_tous[actuelG->enlever()], Polygone::d_tous[actuelG->suivant()->ajouter()])) {
             actuelG = actuelG->suivant();
-            nonCommunG = actuelG->ajouter();
+            nonCommunG.push_back(actuelG->ajouter());
         }
 
         //polygone de droite
-        while (Polygone::d_tous[nonCommunG].aGauche(Polygone::d_tous[actuelD->ajouter()], Polygone::d_tous[actuelD->precedent()->enlever()]) == 1) {
+        while (aGauche(nonCommunG, Polygone::d_tous[actuelD->ajouter()], Polygone::d_tous[actuelD->precedent()->enlever()])) {
             actuelD = actuelD->precedent();
-            nonCommunD = actuelD->ajouter();
+            nonCommunD.push_back(actuelD->ajouter());
         }
     }
     Sommet* hautG = actuelG, * hautD = actuelD;
     actuelG = g.getMax();
     actuelD = d.getMin();
-    nonCommunD = actuelG->retourneIndice(d.getPointsMin(), g.getPointsMax());
-    nonCommunG = actuelG->retourneIndice(g.getPointsMax(), d.getPointsMin());
+    nonCommunD.clear();
+    nonCommunG.clear();
+    nonCommunD.push_back(actuelG->retourneIndice(d.getPointsMin(), g.getPointsMax()));
+    nonCommunG.push_back(actuelG->retourneIndice(g.getPointsMax(), d.getPointsMin()));
 
-    while (Polygone::d_tous[nonCommunD].aGauche(Polygone::d_tous[actuelG->precedent()->ajouter()], Polygone::d_tous[actuelG->precedent()->enlever()]) == 1 ||
-        Polygone::d_tous[nonCommunG].aGauche(Polygone::d_tous[actuelD->enlever()], Polygone::d_tous[actuelD->suivant()->enlever()]) == 1) {
+    while (!aGauche(nonCommunD, Polygone::d_tous[actuelG->precedent()->ajouter()], Polygone::d_tous[actuelG->precedent()->enlever()]) ||
+        aGauche(nonCommunG, Polygone::d_tous[actuelD->enlever()], Polygone::d_tous[actuelD->suivant()->enlever()]) ) {
         
         //polygone de gauche
-        while (Polygone::d_tous[nonCommunD].aGauche(Polygone::d_tous[actuelG->precedent()->ajouter()], Polygone::d_tous[actuelG->precedent()->enlever()]) == 1) {
+        while (!aGauche(nonCommunD, Polygone::d_tous[actuelG->precedent()->ajouter()], Polygone::d_tous[actuelG->precedent()->enlever()])) {
             actuelG = actuelG->precedent();
-            nonCommunG = actuelG->enlever();
+            nonCommunG.push_back(actuelG->enlever());
         }
 
         //polygone de droite
-        while (Polygone::d_tous[nonCommunG].aGauche(Polygone::d_tous[actuelD->enlever()], Polygone::d_tous[actuelD->suivant()->enlever()]) == 1) {
+        while (aGauche(nonCommunG, Polygone::d_tous[actuelD->enlever()], Polygone::d_tous[actuelD->suivant()->enlever()])) {
             actuelD = actuelD->suivant();
-            nonCommunD = actuelD->ajouter();
+            nonCommunD.push_back(actuelD->ajouter());
         }
     }
 
     Sommet* basG = actuelG, * basD = actuelD;
-
+    setcolor(RED    );
     circle(hautG->cdg().x()/2, 1000 -( hautG->cdg().y() / 2), 6);
+    setcolor(GREEN);
     circle(hautD->cdg().x() / 2, 1000 - (hautD->cdg().y() / 2), 6);
+    setcolor(YELLOW);
     circle(basG->cdg().x() / 2, 1000 - (basG->cdg().y() / 2), 6);
+    setcolor(BROWN);
     circle(basD->cdg().x() / 2, 1000 - (basD->cdg().y() / 2), 6);
+    setcolor(BLUE);
     return Polygone{};
 }
 
