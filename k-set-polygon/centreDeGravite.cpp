@@ -22,6 +22,7 @@ void CentreDeGravite::affiche() const {
 	cout << "x = " << x() << " et y = " << y() << "\n";
 	
 }
+
 void CentreDeGravite::affiche(int k) const {
 
 	circle(x() / k, 1000-( y() / k), 2);

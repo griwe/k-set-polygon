@@ -134,6 +134,8 @@
     <ClCompile Include="affichage.cpp" />
     <ClCompile Include="centreDeGravite.cpp" />
     <ClCompile Include="enveloppe.cpp" />
+    <ClCompile Include="fonction.cpp" />
+    <ClCompile Include="ksetPolygone.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="polygone.cpp" />
@@ -144,9 +146,12 @@
     <ClInclude Include="affichage.h" />
     <ClInclude Include="centreDeGravite.h" />
     <ClInclude Include="enveloppe.h" />
+    <ClInclude Include="fonction.h" />
     <ClInclude Include="graphics.h" />
+    <ClInclude Include="ksetPolygone.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="polygone.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="sommet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

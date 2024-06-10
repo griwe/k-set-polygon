@@ -4,6 +4,7 @@
 #include "sommet.h"
 #include "point.h"
 
+
 class Polygone
 {
 public:

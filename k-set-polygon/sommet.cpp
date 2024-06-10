@@ -28,21 +28,7 @@ void Sommet::setEnlever(int enlever)
     this->d_enlever = enlever;
 }
 
-bool Sommet::contains(const vector<int> vec, const int indice)
-{
-	return std::find(vec.begin(), vec.end(), indice) != vec.end();
-}
 
-
-int Sommet::retourneIndice(vector<int> a, vector<int> b)
-{
-	for (int i = 0; i < a.size(); i++) {
-		if (!contains(b, a[i])) {
-			return a[i];
-		}
-	}
-	return -1;
-}
 
 void Sommet::inialiserAjEnl()
 {

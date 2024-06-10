@@ -3,17 +3,21 @@
 
 #include "point.h"
 #include "polygone.h"
-
+#include "fonction.h"
+#include"sommet.h"
 #include <vector>
 
 using namespace std;
 
-// Construit dans le polygone P l�enveloppe convexe des trois points a,b,c. On suppose P initialement vide.
-// La fonction renvoie l�adresse du sommet de coordonn�es c.
-Sommet* enveloppe(const Point& a, const Point& b, const Point& c, Polygone& P);
+Polygone enveloppe(vector<CentreDeGravite> t, int g, int d);
 
-// Construit dans le polygone P l�enveloppe convexe de l'ensemble de points donn� dans T.
-// On suppose P initialement vide.
-void enveloppe(vector<Point>& T, Polygone& P);
+Polygone lier1Sommet(vector<CentreDeGravite> t, int g, int d);
+
+Polygone lier2Sommet(vector<CentreDeGravite> t, int g, int d);
+
+Polygone lier3Sommet(vector<CentreDeGravite> t, int g, int d);
+
+Sommet* fusionConvexes(Sommet* x, Sommet* y);
+
 
 #endif

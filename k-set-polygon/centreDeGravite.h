@@ -28,17 +28,13 @@ public:
     //CentreDeGravite(CentreDeGravite& cdg) : Point{ cdg.x(),cdg.y()}, t_ensemble{cdg.ensemble()} {}
 
     // M�thode pour ajouter un point � l'ensemble
-    void ajouterPoint(int indice) {
-        t_ensemble.push_back(indice);
-    }
+    void ajouterPoint(int indice) {t_ensemble.push_back(indice);}
 
     void affiche() const;
 
     void affiche(int k) const;
 
-    void pop_back() {
-        t_ensemble.pop_back();
-    }
+    void pop_back() {t_ensemble.pop_back();}
 
     std::vector<int> ensemble() const { return t_ensemble; }
 

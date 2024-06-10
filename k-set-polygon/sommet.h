@@ -6,6 +6,7 @@
 #include<vector>
 #include<iterator>
 #include <algorithm>
+#include"fonction.h"
 using namespace std;
 
 
@@ -40,9 +41,7 @@ public:
 	void setAjouter(int ajouter);
 	void setEnlever(int enlever);
 
-	bool contains(const vector<int> vec, const int indice);
-	//Fonction qui retourne l'indice du point dans le tableau A que B ne possède pas
-	int retourneIndice(vector<int> a, vector<int> b);
+	
 	void inialiserAjEnl();
 
 
