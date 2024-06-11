@@ -6,6 +6,16 @@ using namespace std;
 
 std::vector<Point> Polygone::d_tous = std::vector<Point>();
 
+void Polygone::inialiserAjEnlP()
+{
+    Sommet* m = d_min;
+    do
+    {
+        m->inialiserAjEnl();
+        m = m->suivant();
+    } while (m != nullptr && m != d_min);
+}
+
 // Ajoute un nouveau sommet au polygone. Les coordonn�es du sommet � ajouter sont celles du point p.
 // sommetPrecedent est soit un pointeur sur l�un des sommets d�j� pr�sents dans le polygone,
 // soit un pointeur nul si le polygone est vide.
@@ -52,17 +62,6 @@ void Polygone::supprimeSommet(Sommet* s)
         s->suivant()->setPrecedent(s->precedent());
     }
 
-}
-
-
-Sommet* Polygone::getMin()
-{
-    return d_min;
-}
-
-Sommet* Polygone::getMax()
-{
-    return d_max;
 }
 
 void Polygone::affiche() const
@@ -162,6 +161,11 @@ int Polygone::trouverNv(const Polygone& p1, const Polygone& p2) const
 
     }
     return (a3.size() - k);
+}
+
+void Polygone::initPoints(const std::vector<Point>& pts)
+{
+    Polygone::d_tous = pts;
 }
 
 

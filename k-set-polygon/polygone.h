@@ -12,7 +12,7 @@ public:
 
 	// Constructeur par défaut
 	Polygone() : d_min(nullptr), d_max(nullptr) {}
-
+	
 	// Constructeur avec des sommets min et max
 	Polygone(Sommet* min, Sommet* max) : d_min(min), d_max(max) {}
 
@@ -44,21 +44,14 @@ public:
 
 	// Getter pour le tableau de points maximal
 	const std::vector<int> getPointsMax() const { return t_max; }
-
+	
+	// Getter pour le tableau de points global
 	const std::vector<Point> getTous() const { return d_tous; }
 
 	// constructeur par défaut
 
 
-	void inialiserAjEnlP()
-	{
-		Sommet* m = d_min;
-		do
-		{
-			m->inialiserAjEnl();
-			m = m->suivant();
-		} while (m != nullptr && m != d_min);
-	}
+	void inialiserAjEnlP();
 
 	void setTMin(vector<int> tab) { t_min = tab; }
 
@@ -79,19 +72,13 @@ public:
 	// Supprime le sommet d’adresse s du polygone.
 	// On suppose que s est effectivement présent dans le polygone.
 	void supprimeSommet(Sommet* s);
-	Sommet* fusionConvexes(Sommet* x, Sommet* y);
-	Sommet* getMin();
-	Sommet* getMax();
-
+	
 	void affiche() const;
 	int cptSommet() const;
 	std::vector<int> sommets() const;
 	int trouverNv(const Polygone& p1, const Polygone& p2) const;
 
-	void bricolage(const std::vector<Point>& pts)
-	{
-		Polygone::d_tous = pts;
-	}
+	void initPoints(const std::vector<Point>& pts);
 
 
 

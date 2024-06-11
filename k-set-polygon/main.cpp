@@ -49,7 +49,7 @@ int main()
     getch();
 
     Polygone p{};
-    p.bricolage(points);
+    p.initPoints(points);
     int compteur = 0;
     //Polygone a = Polygone{ diviserPourRegner(Polygone::d_tous, 0, 6, 4, 0, compteur) };
     //Polygone b = Polygone{ diviserPourRegner(Polygone::d_tous, 0, 12, 4, 0, compteur) };
